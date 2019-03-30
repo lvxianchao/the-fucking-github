@@ -85,7 +85,7 @@
         },
         mounted() {
             let gh = new Github({
-                token: '8229c45544c5228d45e35bda9f5467dabc9d2d81',
+                token: 'f70ebc38a97d582872a9ec9fe959e17f1117103d',
             });
 
             // 获取用户
