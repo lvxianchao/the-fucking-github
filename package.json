@@ -1,10 +1,28 @@
 {
-  "name": "the-fucking-github",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "dependencies": {
-    "laravel-mix": "^4.0.15",
-    "lowdb": "^1.0.0"
-  }
+    "name": "the-fucking-github",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "dependencies": {
+        "cross-env": "^5.2.0",
+        "element-ui": "^2.7.0",
+        "github-api": "^3.0.0",
+        "laravel-mix": "^4.0.15",
+        "lowdb": "^1.0.0",
+        "vue": "^2.6.10"
+    },
+    "scripts": {
+        "dev": "npm run development",
+        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "prod": "npm run production",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    },
+    "devDependencies": {
+        "resolve-url-loader": "2.3.1",
+        "sass": "^1.17.3",
+        "sass-loader": "7.*",
+        "vue-template-compiler": "^2.6.10"
+    }
 }

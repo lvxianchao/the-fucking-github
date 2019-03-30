@@ -1,0 +1,29 @@
+{
+    "manifest_version": 2,
+    "name": "The Fucking Github",
+    "version": "1.0.0",
+    "description": "View starred repositories, organizing stars, searching stars for Github.",
+    "homepage_url": "https://github.com/lvxianchao/the-fucking-github",
+    "icons": {
+        "128": "icons/128.png",
+        "32": "icons/32.png",
+        "64": "icons/64.png",
+        "16": "icons/16.png",
+        "48": "icons/48.png"
+    },
+    "browser_action": {
+        "default_icon": "icons/48.png"
+    },
+    "permissions": [
+        "storage",
+        "activeTab",
+        "tabs",
+        "https://api.github.com/*"
+    ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "background": {
+        "scripts": [
+            "js/background.js"
+        ]
+    }
+}
