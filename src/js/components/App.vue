@@ -9,7 +9,7 @@
 
                         <div class="starred">
                             <i class="el-icon-star-on"></i>
-                            <span>{{ repositories.length + 1 }}</span>
+                            <span>{{ starredCount }}</span>
                         </div>
                     </el-col>
                 </el-row>
@@ -23,29 +23,30 @@
                         <el-row>
                             <el-col :span="24">
                                 <div class="grid-content bg-purple-dark">
-                                    <el-card v-for="repository in repositories" :key="repository.id"
+                                    <el-card v-for="repository in repositories" :key="repository.repo.id"
                                              class="repository-card" @click.native="showRepository(repository)"
                                              shadow="hover">
                                         <div class="owner-avatar">
-                                            <img :src="repository.owner.avatar_url" :alt="repository.owner.login">
+                                            <img :src="repository.repo.owner.avatar_url"
+                                                 :alt="repository.repo.owner.login">
                                         </div>
-                                        <span class="owner-name">{{ repository.owner.login }}</span>
-                                        <div class="repository-name">{{ repository.name }}</div>
+                                        <span class="owner-name">{{ repository.repo.owner.login }}</span>
+                                        <div class="repository-name">{{ repository.repo.name }}</div>
 
-                                        <div class="repository-description">{{ repository.description }}</div>
+                                        <div class="repository-description">{{ repository.repo.description }}</div>
 
                                         <div>
                                             <div class="language">
-                                                <img :src="languageIcon(repository.language)">
-                                                <div>{{ repository.language ? repository.language : 'unknown' }}</div>
+                                                <img :src="languageIcon(repository.repo.language)">
+                                                <div>{{ repository.repo.language ? repository.repo.language : 'unknown' }}</div>
                                             </div>
                                             <div class="starred">
                                                 <i class="el-icon-star-off"></i>
-                                                <span>{{ repository.stargazers_count }}</span>
+                                                <span>{{ repository.repo.stargazers_count }}</span>
                                             </div>
                                             <div class="forks">
                                                 <i class="el-icon-share"></i>
-                                                <span>{{ repository.forks }}</span>
+                                                <span>{{ repository.repo.forks }}</span>
                                             </div>
                                         </div>
                                         <div class="clear"></div>
@@ -61,18 +62,18 @@
                 <el-main class="main">
                     <el-card class="repository-container">
                         <header>
-                            <a :href="repository.html_url" class="full-name">
+                            <a :href="repository.repo.html_url" class="full-name">
                                 <i class="el-icon-info"></i>
-                                <span>{{ repository.full_name }}</span>
+                                <span>{{ repository.repo.full_name }}</span>
                             </a>
 
-                            <span class="time">Created: {{ repository.created_at }}</span>
-                            <span class="time">Updated: {{ repository.updated_at }}</span>
+                            <span class="time">Created: {{ repository.repo.created_at }}</span>
+                            <span class="time">Updated: {{ repository.repo.updated_at }}</span>
 
                             <i class="el-icon-document clone"></i>
                         </header>
 
-                        <p class="description">{{ repository.description }}</p>
+                        <p class="description">{{ repository.repo.description }}</p>
 
                         <div class="tags">
                             <el-input placeholder="标签">
@@ -93,16 +94,20 @@
 <script>
     import Github from 'github-api';
     import 'github-markdown-css';
+    import axios from 'axios';
 
     export default {
         name: 'App',
         data() {
             return {
+                token: '',
                 github: {},
                 user: {},
-                count: '',
+                starredCount: '',
                 repositories: [],
-                repository: {},
+                repository: {
+                    repo: {}
+                },
                 readme: '',
             }
         },
@@ -119,58 +124,88 @@
             // 当点击左侧内的项目卡片时，显示项目相关内容
             showRepository(repository) {
                 // 处理时间格式，只显示 Y-m-d
-                repository.created_at = repository.created_at.substr(0, 10);
-                repository.updated_at = repository.updated_at.substr(0, 10);
+                repository.repo.created_at = repository.repo.created_at.substr(0, 10);
+                repository.repo.updated_at = repository.repo.updated_at.substr(0, 10);
                 this.repository = repository;
-                console.info(repository);
 
                 // 渲染 README.md
-                const repo = this.github.getRepo(repository.owner.login, repository.name);
-                repo.getReadme(repository.default_branch, true, (error, markdown) => {
+                const repo = this.github.getRepo(repository.repo.owner.login, repository.repo.name);
+                repo.getReadme(repository.repo.default_branch, true, (error, markdown) => {
                     const md = this.github.getMarkdown();
 
                     md.render({
                         text: markdown,
                         mode: 'gfm',
-                        context: repository.full_name,
+                        context: repository.repo.full_name,
                     }, (error, render) => {
-                        console.log(render);
                         this.readme = render;
                     });
                 });
             },
-        },
-        mounted() {
-            let gh = new Github({
-                token: '',
-            });
 
-            this.github = gh;
+            // 获取已 Star 数目和项目列表
+            getStarredList() {
+                let url = 'https://api.github.com/user/starred';
+
+                let options = {
+                    params: {
+                        sort: 'created',
+                        per_page: 1,
+                        page: 1,
+                    },
+                    headers: {
+                        Authorization: 'token ' + this.token,
+                        Accept: 'application/vnd.github.v3.star+json',
+                    },
+                };
+
+                axios.get(url, options)
+                    .then((response) => {
+                        let links = response.headers.link.split(',');
+                        this.starredCount = links[1].match(/&page=(\d+)/)[1];
+                    })
+                    .then(async () => {
+                        let lastPage = Math.ceil(this.starredCount / 100);
+
+                        let promises = [];
+
+                        for (let i = 1; i <= lastPage; i++) {
+                            options.params.page = await i;
+                            options.params.per_page = 100;
+                            promises.push(axios.get(url, options));
+                        }
+
+                        axios.all(promises).then((results) => {
+                            results.forEach((response) => {
+                                console.log(response.data);
+                                this.repositories = this.repositories.concat(response.data);
+                            });
+                        });
+                    });
+            },
+        },
+
+        mounted() {
+            this.github = new Github({token: this.token});
 
             // 默认显示：The Fucking Github 内容
-            const TheFuckingGithub = gh.getRepo('lvxianchao', 'the-fuking-github');
+            const TheFuckingGithub = this.github.getRepo('lvxianchao', 'the-fucking-github');
             TheFuckingGithub.getDetails((error, result) => {
-                this.repository = result;
-                this.showRepository(result);
+                this.repository.repo = result;
+                this.showRepository(this.repository);
             });
 
-            // 获取用户
-            let me = gh.getUser();
-
             // 获取用户信息
-            me.getProfile((error, result) => {
+            this.github.getUser().getProfile((error, result) => {
                 this.user = result;
             });
 
             // window.localStorage.setItem('repositories', JSON.stringify(this.repositories));
 
-            this.repositories = JSON.parse(window.localStorage.getItem('repositories'));
-            // 获取已喜欢的项目
-            // me.listStarredRepos((error, result) => {
-            //     this.count = result.length;
-            //     // this.repositories = result;
-            //     console.log(result);
-            // });
+            // this.repositories = JSON.parse(window.localStorage.getItem('repositories'));
+
+            // 读取已 Star 数目和列表
+            this.getStarredList();
         }
     }
 </script>
@@ -324,7 +359,7 @@
                         }
                     }
 
-                    .description{
+                    .description {
                         margin-top: 20px;
                         font-size: 16px;
                         color: #666;

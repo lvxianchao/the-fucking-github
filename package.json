@@ -4,6 +4,7 @@
     "main": "index.js",
     "license": "MIT",
     "dependencies": {
+        "axios": "^0.18.0",
         "cross-env": "^5.2.0",
         "element-ui": "^2.7.0",
         "github-api": "^3.0.0",
