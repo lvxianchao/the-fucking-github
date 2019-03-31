@@ -2805,6 +2805,11 @@ github-api@^3.0.0:
     js-base64 "^2.1.9"
     utf8 "^2.1.1"
 
+github-markdown-css@^3.0.1:
+  version "3.0.1"
+  resolved "http://registry.npm.taobao.org/github-markdown-css/download/github-markdown-css-3.0.1.tgz#d08db1060d2e182025e0d07d547cfe2afed30205"
+  integrity sha1-0I2xBg0uGCAl4NB9VHz+Kv7TAgU=
+
 glob-parent@^3.1.0:
   version "3.1.0"
   resolved "http://registry.npm.taobao.org/glob-parent/download/glob-parent-3.1.0.tgz#9e6af6299d8d3bd2bd40430832bd113df906c5ae"

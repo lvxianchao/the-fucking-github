@@ -1,3 +1,3 @@
-# The Fuking Github
+# The Fucking Github
 
 A Chrome extension for Github.
