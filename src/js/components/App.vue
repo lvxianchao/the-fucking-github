@@ -8,7 +8,7 @@
                         <span class="username">{{ user.name }}</span>
 
                         <div class="starred">
-                            <i class="el-icon-star-on"></i>
+                            <i class="fa fa-star"></i>
                             <span>{{ starredCount }}</span>
                         </div>
                     </el-col>
@@ -41,11 +41,11 @@
                                                 <div>{{ repository.repo.language ? repository.repo.language : 'unknown' }}</div>
                                             </div>
                                             <div class="starred">
-                                                <i class="el-icon-star-off"></i>
+                                                <i class="fa fa-star-o"></i>
                                                 <span>{{ repository.repo.stargazers_count }}</span>
                                             </div>
                                             <div class="forks">
-                                                <i class="el-icon-share"></i>
+                                                <i class="fa fa-code-fork"></i>
                                                 <span>{{ repository.repo.forks }}</span>
                                             </div>
                                         </div>
@@ -63,14 +63,14 @@
                     <el-card class="repository-container">
                         <header>
                             <a :href="repository.repo.html_url" class="full-name">
-                                <i class="el-icon-info"></i>
+                                <i class="fa fa-home"></i>
                                 <span>{{ repository.repo.full_name }}</span>
                             </a>
 
                             <span class="time">Created: {{ repository.repo.created_at }}</span>
                             <span class="time">Updated: {{ repository.repo.updated_at }}</span>
 
-                            <i class="el-icon-document clone"></i>
+                            <i class="fa fa-clipboard clone"></i>
                         </header>
 
                         <p class="description">{{ repository.repo.description }}</p>
@@ -78,7 +78,7 @@
                         <div class="tags">
                             <el-input placeholder="标签">
                                 <template slot="prepend">
-                                    <i class="el-icon-share"></i>
+                                    <i class="fa fa-tags"></i>
                                 </template>
                             </el-input>
                         </div>
