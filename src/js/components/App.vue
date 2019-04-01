@@ -4,8 +4,10 @@
             <el-card>
                 <el-row>
                     <el-col :span="24">
-                        <img class="avatar" :src="user.avatar_url" :alt="user.name">
-                        <span class="username">{{ user.name }}</span>
+                        <a :href="user.html_url" target="_blank">
+                            <img class="avatar" :src="user.avatar_url" :alt="user.name">
+                            <span class="username">{{ user.name }}</span>
+                        </a>
 
                         <div class="starred">
                             <i class="fa fa-star"></i>
@@ -23,8 +25,10 @@
                         <el-row>
                             <el-col :span="24">
                                 <div class="grid-content bg-purple-dark">
-                                    <el-card v-for="repository in repositories" :key="repository.repo.id"
-                                             class="repository-card" @click.native="showRepository(repository)"
+                                    <el-card v-for="(repository, index) in repositories" :key="repository.repo.id"
+                                             class="repository-card"
+                                             :class="{'aside-card-selected': index === asideCardSelectedIndex}"
+                                             @click.native="showRepository(repository, index)"
                                              shadow="hover">
                                         <div class="owner-avatar">
                                             <img :src="repository.repo.owner.avatar_url"
@@ -62,7 +66,7 @@
                 <el-main class="main">
                     <el-card class="repository-container">
                         <header>
-                            <a :href="repository.repo.html_url" class="full-name">
+                            <a :href="repository.repo.html_url" target="_blank" class="full-name">
                                 <i class="fa fa-home"></i>
                                 <span>{{ repository.repo.full_name }}</span>
                             </a>
@@ -109,6 +113,7 @@
                     repo: {}
                 },
                 readme: '',
+                asideCardSelectedIndex: 0,
             }
         },
         methods: {
@@ -122,7 +127,10 @@
             },
 
             // 当点击左侧内的项目卡片时，显示项目相关内容
-            showRepository(repository) {
+            showRepository(repository, index) {
+                // 侧边栏卡片添加选中样式
+                this.asideCardSelectedIndex = index;
+
                 // 处理时间格式，只显示 Y-m-d
                 repository.repo.created_at = repository.repo.created_at.substr(0, 10);
                 repository.repo.updated_at = repository.repo.updated_at.substr(0, 10);
@@ -163,7 +171,7 @@
                 let lastPage = 0;
 
                 axios.get(url, options)
-                    // 获取总页数
+                // 获取总页数
                     .then((response) => {
                         let links = response.headers.link.split(',');
                         this.starredCount = links[1].match(/&page=(\d+)/)[1];
@@ -175,8 +183,7 @@
                         options.params.per_page = 100;
 
                         axios.get(url, options).then((response) => {
-                            this.repositories = this.repositories.concat(response.data)
-                            console.log(Date.parse(new Date()));
+                            this.repositories = response.data;
                         });
                     })
                     // 获取后续页码的数据
@@ -189,18 +196,18 @@
                             promises.push(axios.get(url, options));
                         }
 
-                        axios.all(promises).then((results) => {
-                            results.forEach((response) => {
-                                this.repositories = this.repositories.concat(response.data);
-                                console.log(Date.parse(new Date()));
+                        axios.all(promises)
+                            .then((results) => {
+                                results.forEach((response) => {
+                                    this.repositories = this.repositories.concat(response.data);
+                                });
                             });
-                        });
                     });
             },
         },
 
         mounted() {
-            this.token = localStorage.getItem('token');
+            this.token = store.get('token');
 
             this.github = new Github({token: this.token});
 
@@ -216,7 +223,6 @@
                 this.user = result;
             });
 
-
             // 读取已 Star 数目和列表
             this.getStarredList();
         }
@@ -224,6 +230,8 @@
 </script>
 
 <style lang="scss">
+
+
     .header {
         padding: 0 5px;
         margin-bottom: 15px;
@@ -233,19 +241,24 @@
         z-index: 1;
         top: 0;
 
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            float: left;
-            margin-right: 10px;
-        }
+        a {
+            text-decoration: none;
+            color: #333333;
 
-        .username {
-            height: 40px;
-            line-height: 40px;
-            font-size: 28px;
-            float: left;
+            .avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                float: left;
+                margin-right: 10px;
+            }
+
+            .username {
+                height: 40px;
+                line-height: 40px;
+                font-size: 28px;
+                float: left;
+            }
         }
 
         .starred {
@@ -277,6 +290,17 @@
 
                     .repository-card {
                         margin-bottom: 10px;
+
+                        &.aside-card-selected {
+                            border-color: blueviolet;
+                            -webkit-box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
+                            -moz-box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
+                            box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
+                        }
+                        
+                        &:hover {
+                            border-color: #cccccc;
+                        }
 
                         .owner-avatar {
                             width: 20px;
