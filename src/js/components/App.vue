@@ -159,17 +159,31 @@
                     },
                 };
 
+                // 最后一页页码
+                let lastPage = 0;
+
                 axios.get(url, options)
+                    // 获取总页数
                     .then((response) => {
                         let links = response.headers.link.split(',');
                         this.starredCount = links[1].match(/&page=(\d+)/)[1];
+                        lastPage = Math.ceil(this.starredCount / 100);
                     })
-                    .then(async () => {
-                        let lastPage = Math.ceil(this.starredCount / 100);
+                    // 优先获取第一页的数据渲染
+                    .then(() => {
+                        options.params.page = 1;
+                        options.params.per_page = 100;
 
+                        axios.get(url, options).then((response) => {
+                            this.repositories = this.repositories.concat(response.data)
+                            console.log(Date.parse(new Date()));
+                        });
+                    })
+                    // 获取后续页码的数据
+                    .then(async () => {
                         let promises = [];
 
-                        for (let i = 1; i <= lastPage; i++) {
+                        for (let i = 2; i <= lastPage; i++) {
                             options.params.page = await i;
                             options.params.per_page = 100;
                             promises.push(axios.get(url, options));
@@ -177,8 +191,8 @@
 
                         axios.all(promises).then((results) => {
                             results.forEach((response) => {
-                                console.log(response.data);
                                 this.repositories = this.repositories.concat(response.data);
+                                console.log(Date.parse(new Date()));
                             });
                         });
                     });
@@ -186,6 +200,8 @@
         },
 
         mounted() {
+            this.token = localStorage.getItem('token');
+
             this.github = new Github({token: this.token});
 
             // 默认显示：The Fucking Github 内容
@@ -200,9 +216,6 @@
                 this.user = result;
             });
 
-            // window.localStorage.setItem('repositories', JSON.stringify(this.repositories));
-
-            // this.repositories = JSON.parse(window.localStorage.getItem('repositories'));
 
             // 读取已 Star 数目和列表
             this.getStarredList();
