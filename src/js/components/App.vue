@@ -292,7 +292,7 @@
                         margin-bottom: 10px;
 
                         &.aside-card-selected {
-                            border-color: blueviolet;
+                            border-color: violet;
                             -webkit-box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
                             -moz-box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
                             box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
