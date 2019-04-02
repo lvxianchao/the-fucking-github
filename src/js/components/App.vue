@@ -1,5 +1,5 @@
 <template>
-    <el-container>
+    <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="Loading...">
         <el-header class="header">
             <el-card>
                 <el-row>
@@ -8,7 +8,6 @@
                             <img class="avatar" :src="user.avatar_url" :alt="user.name">
                             <span class="username">{{ user.name }}</span>
                         </a>
-
                         <div class="starred">
                             <i class="fa fa-star"></i>
                             <span>{{ starredCount }}</span>
@@ -75,7 +74,9 @@
                                 <span>{{ repository.repo.full_name }}</span>
                             </a>
 
-                            <i class="fa fa-clipboard clone"></i>
+                            <el-tooltip effect="dark" placement="top" content="Clone with HTTPS">
+                                <el-button type="info" icon="fa fa-clone" circle class="clone"></el-button>
+                            </el-tooltip>
 
                             <div class="time">
                                 <div>
@@ -96,7 +97,7 @@
                         <p class="description">{{ repository.repo.description }}</p>
 
                         <div class="tags">
-                            <el-input placeholder="标签">
+                            <el-input placeholder="标签" size="small">
                                 <template slot="prepend">
                                     <i class="fa fa-tags"></i>
                                 </template>
@@ -130,6 +131,7 @@
                 },
                 readme: '',
                 asideCardSelectedIndex: 0,
+                fullscreenLoading: true,
             }
         },
         methods: {
@@ -199,6 +201,7 @@
                         options.params.per_page = 100;
 
                         axios.get(url, options).then((response) => {
+                            this.fullscreenLoading = false;
                             this.repositories = response.data;
                         });
                     })
@@ -219,11 +222,6 @@
                                 });
                             });
                     });
-            },
-
-            // 截取时间前十位
-            getTimeTenLength(time) {
-                return time.substr(0, 10);
             },
         },
 
@@ -251,7 +249,10 @@
 </script>
 
 <style lang="scss">
-
+    $main-color: #787AF6;
+    .el-button--text {
+        color: $main-color;
+    }
 
     .header {
         padding: 0 5px;
@@ -261,10 +262,11 @@
         width: 100%;
         z-index: 1;
         top: 0;
+        border-top: 3px solid $main-color;
 
         a {
             text-decoration: none;
-            color: #333333;
+            color: #333;
 
             .avatar {
                 width: 40px;
@@ -310,10 +312,10 @@
                     width: 400px;
 
                     .repository-card {
-                        margin-bottom: 10px;
+                        margin-bottom: 15px;
 
                         &.aside-card-selected {
-                            border-color: violet;
+                            border-color: $main-color;
                             -webkit-box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
                             -moz-box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
                             box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
@@ -408,6 +410,10 @@
                             text-decoration: none;
                             color: #333333;
                             margin-right: 30px;
+
+                            .el-button {
+                                font-size: 24px;
+                            }
                         }
 
                         .time {
