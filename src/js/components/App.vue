@@ -44,13 +44,17 @@
                                                 <img :src="languageIcon(repository.repo.language)">
                                                 <div>{{ repository.repo.language ? repository.repo.language : 'unknown' }}</div>
                                             </div>
-                                            <div class="starred">
-                                                <i class="fa fa-star-o"></i>
-                                                <span>{{ repository.repo.stargazers_count }}</span>
+                                            <div class="starred-at">
+                                                <i class="fa fa-clock-o"></i>
+                                                <span>{{ repository.starred_at.substr(0, 10) }}</span>
                                             </div>
-                                            <div class="forks">
+                                            <div class="forks-count">
                                                 <i class="fa fa-code-fork"></i>
                                                 <span>{{ repository.repo.forks }}</span>
+                                            </div>
+                                            <div class="starred-count">
+                                                <i class="fa fa-star-o"></i>
+                                                <span>{{ repository.repo.stargazers_count }}</span>
                                             </div>
                                         </div>
                                         <div class="clear"></div>
@@ -71,10 +75,22 @@
                                 <span>{{ repository.repo.full_name }}</span>
                             </a>
 
-                            <span class="time">Created: {{ repository.repo.created_at }}</span>
-                            <span class="time">Updated: {{ repository.repo.updated_at }}</span>
-
                             <i class="fa fa-clipboard clone"></i>
+
+                            <div class="time">
+                                <div>
+                                    <i class="fa fa-clock-o"></i>
+                                    <span>Created: {{ repository.repo.created_at }}</span>
+                                </div>
+                                <div>
+                                    <i class="fa fa-clock-o"></i>
+                                    <span>Updated: {{ repository.repo.updated_at }}</span>
+                                </div>
+                                <div v-if="repository.starred_at">
+                                    <i class="fa fa-clock-o"></i>
+                                    <span>Starred: {{ repository.starred_at.substr(0, 10) }}</span>
+                                </div>
+                            </div>
                         </header>
 
                         <p class="description">{{ repository.repo.description }}</p>
@@ -204,6 +220,11 @@
                             });
                     });
             },
+
+            // 截取时间前十位
+            getTimeTenLength(time) {
+                return time.substr(0, 10);
+            },
         },
 
         mounted() {
@@ -297,7 +318,7 @@
                             -moz-box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
                             box-shadow: 0 2px 12px 12px rgba(138, 43, 225, .1);
                         }
-                        
+
                         &:hover {
                             border-color: #cccccc;
                         }
@@ -343,13 +364,18 @@
                             }
                         }
 
-                        .starred {
-                            float: right;
-                        }
-
-                        .forks {
+                        .starred-count {
                             float: right;
                             margin-right: 10px;
+                        }
+
+                        .forks-count {
+                            float: right;
+                            margin-right: 10px;
+                        }
+
+                        .starred-at {
+                            float: right;
                         }
 
                         .clear {
@@ -387,7 +413,12 @@
                         .time {
                             color: #cccccc;
                             font-size: 14px;
-                            margin-right: 10px;
+                            margin-top: 15px;
+
+                            div {
+                                display: inline-block;
+                                margin-right: 20px;
+                            }
                         }
 
                         .clone {
