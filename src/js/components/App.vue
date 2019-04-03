@@ -1,5 +1,6 @@
 <template>
-    <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="Loading...">
+    <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="Loading...">
         <el-header class="header">
             <el-card>
                 <el-row>
@@ -96,13 +97,14 @@
 
                         <p class="description">{{ repository.repo.description }}</p>
 
-                        <div class="tags">
-                            <el-input placeholder="标签" size="small">
-                                <template slot="prepend">
-                                    <i class="fa fa-tags"></i>
-                                </template>
-                            </el-input>
-                        </div>
+                        <Tags :tags="tags" :repository="repository"></Tags>
+                        <!--                        <div class="tags">-->
+                        <!--                            <el-select v-model="selectTags" multiple filterable allow-create placeholder="add tags"-->
+                        <!--                                       default-first-option>-->
+                        <!--                                <el-option v-for="tag in tags" :key="tag.name" :value="tag.id"-->
+                        <!--                                           :label="tag.name"></el-option>-->
+                        <!--                            </el-select>-->
+                        <!--                        </div>-->
 
                         <div class="markdown-body" v-html="readme"></div>
                     </el-card>
@@ -116,6 +118,7 @@
     import Github from 'github-api';
     import 'github-markdown-css';
     import axios from 'axios';
+    import Tags from './Tags';
 
     export default {
         name: 'App',
@@ -132,8 +135,19 @@
                 readme: '',
                 asideCardSelectedIndex: 0,
                 fullscreenLoading: true,
+                tags: [
+                    {
+                        id: 1,
+                        name: 'fuck',
+                    },
+                    {
+                        id: 2,
+                        name: 'you',
+                    },
+                ],
             }
         },
+        components: {Tags},
         methods: {
             // 处理语言 icon
             languageIcon(language) {
@@ -223,27 +237,34 @@
                             });
                     });
             },
+
+            // 内容区默认显示 The Fucking Github
+            theFuckingGithub() {
+                const TheFuckingGithub = this.github.getRepo('lvxianchao', 'the-fucking-github');
+                TheFuckingGithub.getDetails((error, result) => {
+                    this.repository.repo = result;
+                    this.showRepository(this.repository);
+                });
+            },
+
+            // 获取当前用户信息
+            getUserInfo() {
+                this.github.getUser().getProfile((error, result) => {
+                    this.user = result;
+                });
+            }
         },
 
         mounted() {
-            this.token = store.get('token');
-
+            this.token = db.get('token').value();
             this.github = new Github({token: this.token});
 
-            // 默认显示：The Fucking Github 内容
-            const TheFuckingGithub = this.github.getRepo('lvxianchao', 'the-fucking-github');
-            TheFuckingGithub.getDetails((error, result) => {
-                this.repository.repo = result;
-                this.showRepository(this.repository);
-            });
-
             // 获取用户信息
-            this.github.getUser().getProfile((error, result) => {
-                this.user = result;
-            });
-
+            this.getUserInfo();
             // 读取已 Star 数目和列表
             this.getStarredList();
+            // 默认显示：The Fucking Github 内容
+            this.theFuckingGithub();
         }
     }
 </script>
@@ -439,9 +460,13 @@
                         color: #666;
                     }
 
-                    .tags {
-                        margin-top: 20px;
-                    }
+                    /*.tags {*/
+                    /*    margin-top: 20px;*/
+
+                    /*    .el-select {*/
+                    /*        width: 100%;*/
+                    /*    }*/
+                    /*}*/
 
                     .markdown-body {
                         box-sizing: border-box;
