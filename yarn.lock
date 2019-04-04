@@ -4167,6 +4167,11 @@ nan@^2.9.2:
   resolved "http://registry.npm.taobao.org/nan/download/nan-2.13.2.tgz#f51dc7ae66ba7d5d55e1e6d4d8092e802c9aefe7"
   integrity sha1-9R3Hrma6fV1V4ebU2AkugCya7+c=
 
+nanoid@^2.0.0:
+  version "2.0.1"
+  resolved "http://registry.npm.taobao.org/nanoid/download/nanoid-2.0.1.tgz#deb55cac196e3f138071911dabbc3726eb048864"
+  integrity sha1-3rVcrBluPxOAcZEdq7w3JusEiGQ=
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "http://registry.npm.taobao.org/nanomatch/download/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -5680,6 +5685,13 @@ shellwords@^0.1.1:
   version "0.1.1"
   resolved "http://registry.npm.taobao.org/shellwords/download/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
   integrity sha1-1rkYHBpI05cyTISHHvvPxz/AZUs=
+
+shortid@^2.2.14:
+  version "2.2.14"
+  resolved "http://registry.npm.taobao.org/shortid/download/shortid-2.2.14.tgz#80db6aafcbc3e3a46850b3c88d39e051b84c8d18"
+  integrity sha1-gNtqr8vD46RoULPIjTngUbhMjRg=
+  dependencies:
+    nanoid "^2.0.0"
 
 signal-exit@^3.0.0:
   version "3.0.2"

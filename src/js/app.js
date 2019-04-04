@@ -4,11 +4,22 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'font-awesome/css/font-awesome.min.css';
 import App from './components/App';
 import Storage from './Storage';
+import _ from 'lodash';
+import shortid from 'shortid';
+
+window._ = _;
 window.db = Storage.db;
+window.shortid = shortid;
+
+db.defaults({
+    token: window.localStorage.getItem('token'),
+    tags: [],
+    tagsAndRepositories: [],
+}).write();
 
 Vue.use(ElementUI);
 
-const app = new Vue({
+window.app = new Vue({
     el: '#app',
     render: h => h(App)
 });

@@ -96,16 +96,7 @@
                         </header>
 
                         <p class="description">{{ repository.repo.description }}</p>
-
-                        <Tags :tags="tags" :repository="repository"></Tags>
-                        <!--                        <div class="tags">-->
-                        <!--                            <el-select v-model="selectTags" multiple filterable allow-create placeholder="add tags"-->
-                        <!--                                       default-first-option>-->
-                        <!--                                <el-option v-for="tag in tags" :key="tag.name" :value="tag.id"-->
-                        <!--                                           :label="tag.name"></el-option>-->
-                        <!--                            </el-select>-->
-                        <!--                        </div>-->
-
+                        <Tags :repository="repository"></Tags>
                         <div class="markdown-body" v-html="readme"></div>
                     </el-card>
                 </el-main>
@@ -135,16 +126,6 @@
                 readme: '',
                 asideCardSelectedIndex: 0,
                 fullscreenLoading: true,
-                tags: [
-                    {
-                        id: 1,
-                        name: 'fuck',
-                    },
-                    {
-                        id: 2,
-                        name: 'you',
-                    },
-                ],
             }
         },
         components: {Tags},
