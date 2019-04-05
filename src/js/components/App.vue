@@ -245,17 +245,19 @@
             },
 
             // 按标签过滤项目
-            filterRepositoriesWithTags(tags) {
-                if (tags.length === 0) {
+            filterRepositoriesWithTags(tagIds) {
+                if (tagIds.length === 0) {
                     // 清空了过滤标签，显示所有的项目。
                     this.repositories = db.get('repositories').value();
                 } else {
                     let repositoryIds = [];
 
-                    tags.forEach(tag => {
-                        let ids = db.get('tagsAndRepositories').filter({tagId: tag}).map('repositoryId').value();
-                        repositoryIds = _.concat(repositoryIds, ids);
+                    tagIds.forEach(tagId => {
+                        let ids = db.get('tagsAndRepositories').filter({tagId: tagId}).map('repositoryId').value();
+                        repositoryIds.push(ids);
                     });
+
+                    repositoryIds = _.intersection(...repositoryIds);
 
                     this.repositories = db.get('repositories').value().filter((repository) => {
                         return _.indexOf(repositoryIds, repository.repo.id) >= 0;
@@ -365,6 +367,7 @@
 
                 .aside-card {
                     width: 400px;
+                    height: 100%;
 
                     .repository-card {
                         margin-bottom: 15px;
