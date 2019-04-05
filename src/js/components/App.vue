@@ -18,8 +18,8 @@
             </el-card>
         </el-header>
 
-        <Search @filter-repositories-with-tags="filterRepositoriesWithTags($event)"
-                @filter-repositories-with-tag-status="filterRepositoriesWithTagStatus($event)"></Search>
+        <Search @filter="filter">
+        </Search>
 
         <el-container class="content">
             <el-aside class="aside" style="width: 400px;">
@@ -244,46 +244,8 @@
                 });
             },
 
-            // 按标签过滤项目
-            filterRepositoriesWithTags(tagIds) {
-                if (tagIds.length === 0) {
-                    // 清空了过滤标签，显示所有的项目。
-                    this.repositories = db.get('repositories').value();
-                } else {
-                    let repositoryIds = [];
-
-                    tagIds.forEach(tagId => {
-                        let ids = db.get('tagsAndRepositories').filter({tagId: tagId}).map('repositoryId').value();
-                        repositoryIds.push(ids);
-                    });
-
-                    repositoryIds = _.intersection(...repositoryIds);
-
-                    this.repositories = db.get('repositories').value().filter((repository) => {
-                        return _.indexOf(repositoryIds, repository.repo.id) >= 0;
-                    });
-                }
-            },
-
-            // 按打标签的状态过滤项目
-            filterRepositoriesWithTagStatus(status) {
-                let taggedRepositoriesIds = db.get('tagsAndRepositories').map('repositoryId').value();
-
-                switch (status) {
-                    case 'all':
-                        this.repositories = db.get('repositories').value();
-                        break;
-                    case 'untagged':
-                        this.repositories = db.get('repositories').value().filter((repository) => {
-                            return _.indexOf(taggedRepositoriesIds, repository.repo.id) === -1;
-                        });
-                        break;
-                    case 'tagged':
-                        this.repositories = db.get('repositories').value().filter((repository) => {
-                            return _.indexOf(taggedRepositoriesIds, repository.repo.id) !== -1;
-                        });
-                        break;
-                }
+            filter(repositories) {
+                this.repositories = repositories;
             }
         },
 
@@ -367,7 +329,6 @@
 
                 .aside-card {
                     width: 400px;
-                    height: 100%;
 
                     .repository-card {
                         margin-bottom: 15px;
