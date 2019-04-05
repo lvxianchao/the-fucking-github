@@ -10,6 +10,7 @@
 <script>
     export default {
         name: "Tags",
+
         props: {
             repository: {
                 type: Object,
@@ -25,12 +26,13 @@
         },
 
         methods: {
+            // 更新标签和项目关联
             tagsAndRepositories() {
-                console.log(this.selected);
                 // 清空关联表
                 let tagsAndRepositories = db.get('tagsAndRepositories');
                 tagsAndRepositories.remove({repositoryId: this.repository.repo.id}).write();
 
+                // 遍历当前项目标签，处理标签表和关联表
                 this.selected.forEach((item, index) => {
                     let data = {tagId: this.selected[index], repositoryId: this.repository.repo.id};
 
@@ -50,10 +52,15 @@
                     data.tagId = this.tags[index].id;
                     tagsAndRepositories.push(data).write();
                 });
-            },
+            }, // tagsAndRepositories
+        }, // methods
 
-
-        },
+        watch: {
+            // 监听到项目变化时，显示项目已打过的标签
+            repository: function (n, o) {
+                this.selected = db.get('tagsAndRepositories').filter({repositoryId: this.repository.repo.id}).map('tagId').value();
+            }
+        }, // watch
 
 
     }
