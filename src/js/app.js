@@ -16,6 +16,20 @@ db.defaults({
     tags: [],
     repositories: [],
     tagsAndRepositories: [],
+    tagStatus: [
+        {
+            value: 'all',
+            label: 'All Repositories',
+        },
+        {
+            value: 'untagged',
+            label: 'Untagged Repositories',
+        },
+        {
+            value: 'tagged',
+            label: 'Tagged Repositories',
+        }
+    ],
 }).write();
 
 Vue.use(ElementUI);

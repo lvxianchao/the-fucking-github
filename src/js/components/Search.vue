@@ -1,9 +1,19 @@
 <template>
     <el-header>
-        <el-row>
+        <el-row :gutter="10">
+            <!--按已打标签和未打标签过滤-->
+            <el-col :span="3">
+                <el-select v-model="selectedTagStatus" default-first-option size="small"
+                           @change="filterRepositoriesWithTagStatus()">
+                    <el-option v-for="status in tagStatus" :key="status.value" :value="status.value"
+                               :label="status.label"></el-option>
+                </el-select>
+            </el-col>
+
+            <!--按标签过滤-->
             <el-col :span="6">
                 <el-select v-model="selectedTagIds" multiple filterable default-first-option
-                           placeholder="Filter with tags" size="small" clearable>
+                           placeholder="Filter with tags" size="small" clearable @change="filterRepositoriesWithTags()">
                     <el-option v-for="tag in tags" :key="tag.id" :value="tag.id" :label="tag.name"></el-option>
                 </el-select>
             </el-col>
@@ -18,18 +28,26 @@
             return {
                 tags: [],
                 selectedTagIds: [],
+                tagStatus: db.get('tagStatus').value(),
+                selectedTagStatus: 'all',
+            }
+        },
+
+        methods: {
+            // 按是否已打标签过滤项目
+            filterRepositoriesWithTagStatus() {
+                this.$emit('filter-repositories-with-tag-status', this.selectedTagStatus);
+            },
+
+            // 按标签过滤项目
+            filterRepositoriesWithTags() {
+                this.$emit('filter-repositories-with-tags', this.selectedTagIds);
             }
         },
 
         mounted() {
             this.tags = db.get('tags').value();
         },
-
-        watch: {
-            selectedTagIds: function (n, o) {
-                this.$emit('filter-repositories-with-tags', n);
-            }
-        }
     }
 </script>
 
@@ -40,18 +58,12 @@
         top: 80px;
         padding: 0 5px;
 
-        .el-select {
-            width: 100%;
+        .el-row {
+            .el-col {
+                .el-select {
+                    width: 100%;
+                }
+            }
         }
-
-        /*.el-card {*/
-        /*    .el-card__body {*/
-        /*        padding: 5px 5px;*/
-
-        /*        */
-        /*    }*/
-
-
-        /*}*/
     }
 </style>
