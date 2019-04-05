@@ -2,7 +2,7 @@
     <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="Loading...">
         <el-header class="header">
-            <el-card>
+            <el-card class="header-card">
                 <el-row>
                     <el-col :span="24">
                         <a :href="user.html_url" target="_blank">
@@ -17,6 +17,8 @@
                 </el-row>
             </el-card>
         </el-header>
+
+        <Search @filter-repositories-with-tags="filterRepositoriesWithTags($event)"></Search>
 
         <el-container class="content">
             <el-aside class="aside" style="width: 400px;">
@@ -110,6 +112,7 @@
     import 'github-markdown-css';
     import axios from 'axios';
     import Tags from './Tags';
+    import Search from './Search';
 
     export default {
         name: 'App',
@@ -128,7 +131,9 @@
                 fullscreenLoading: true,
             }
         },
-        components: {Tags},
+        components: {
+            Tags, Search,
+        },
         methods: {
             // 处理语言 icon
             languageIcon(language) {
@@ -191,11 +196,11 @@
                         lastPage = Math.ceil(this.starredCount / 100);
                     })
                     // 优先获取第一页的数据渲染
-                    .then(() => {
+                    .then(async () => {
                         options.params.page = 1;
                         options.params.per_page = 100;
 
-                        axios.get(url, options).then((response) => {
+                        await axios.get(url, options).then((response) => {
                             this.fullscreenLoading = false;
                             this.repositories = response.data;
                         });
@@ -213,8 +218,11 @@
                         axios.all(promises)
                             .then((results) => {
                                 results.forEach((response) => {
-                                    this.repositories = this.repositories.concat(response.data);
+                                    this.repositories = _.concat(this.repositories, response.data);
                                 });
+
+                                // 填充项目表
+                                db.set('repositories', this.repositories).write();
                             });
                     });
             },
@@ -233,6 +241,23 @@
                 this.github.getUser().getProfile((error, result) => {
                     this.user = result;
                 });
+            },
+
+            // 按标签过滤项目
+            filterRepositoriesWithTags(tags) {
+                if (tags.length === 0) {
+                    // 清空了过滤标签，显示所有的项目。
+                    this.repositories = db.get('repositories').value();
+                } else {
+                    let repositoryIds = [];
+                    tags.forEach(tag => {
+                        repositoryIds = db.get('tagsAndRepositories').filter({tagId: tag}).map('repositoryId').value();
+                    });
+
+                    this.repositories = this.repositories.filter(repository => {
+                        return _.indexOf(repositoryIds, repository.repo.id) >= 0;
+                    });
+                }
             }
         },
 
@@ -265,6 +290,10 @@
         z-index: 1;
         top: 0;
         border-top: 3px solid $main-color;
+
+        .el-card__body {
+            padding: 10px 20px;
+        }
 
         a {
             text-decoration: none;
@@ -301,7 +330,7 @@
         .aside {
             width: 400px;
             position: fixed;
-            top: 100px;
+            top: 180px;
             bottom: 0;
             overflow-x: hidden;
 
@@ -393,7 +422,7 @@
         /*主体内容*/
         .main-container {
             position: fixed;
-            top: 100px;
+            top: 180px;
             left: 400px;
             bottom: 0;
             right: 5px;

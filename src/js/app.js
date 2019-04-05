@@ -14,6 +14,7 @@ window.shortid = shortid;
 db.defaults({
     token: window.localStorage.getItem('token'),
     tags: [],
+    repositories: [],
     tagsAndRepositories: [],
 }).write();
 
