@@ -5,14 +5,41 @@
             <el-card class="header-card">
                 <el-row>
                     <el-col :span="24">
+                        <!--Me-->
                         <a :href="user.html_url" target="_blank">
                             <img class="avatar" :src="user.avatar_url" :alt="user.name">
                             <span class="username">{{ user.name }}</span>
                         </a>
+                        <!--Starred-->
                         <div class="starred">
                             <i class="fa fa-star"></i>
                             <span>{{ starredCount }}</span>
                         </div>
+                        <!--Following-->
+                        <el-badge :value="user.following" type="primary">
+                            <el-select placeholder="Following" class="following-and-followers" value="">
+                                <el-option value="" style="margin-bottom: 10px;" v-for="follower in following" :key="follower.id">
+                                    <a :href="follower.html_url" target="_blank" style="text-decoration: none; color: #666666;">
+                                        <img :src="follower.avatar_url" :alt="follower.login"
+                                             style="width: 30px; border-radius: 5px; margin-right: 10px; float: left;">
+                                        <span>{{ follower.login }}</span>
+                                    </a>
+                                </el-option>
+                            </el-select>
+                        </el-badge>
+                        <!--Followers-->
+                        <el-badge :value="user.followers" type="primary">
+                            <el-select placeholder="Followers" class="following-and-followers" value="">
+                                <a :href="follower.html_url" v-for="follower in followers" :key="follower.id"
+                                   target="_blank" style="text-decoration: none; color: #666666;">
+                                    <el-option value="" style="margin-bottom: 10px;">
+                                        <img :src="follower.avatar_url" :alt="follower.login"
+                                             style="width: 30px; border-radius: 5px; margin-right: 10px; float: left;">
+                                        <span>{{ follower.login }}</span>
+                                    </el-option>
+                                </a>
+                            </el-select>
+                        </el-badge>
                     </el-col>
                 </el-row>
             </el-card>
@@ -130,6 +157,8 @@
                 readme: '',
                 asideCardSelectedIndex: 0,
                 fullscreenLoading: true,
+                following: [],
+                followers: [],
             }
         },
         components: {
@@ -244,9 +273,28 @@
                 });
             },
 
+            // 按条件过滤项目
             filter(repositories) {
                 this.repositories = repositories;
-            }
+            },
+
+            getFollowingAndFollowers() {
+                axios.get('https://api.github.com/user/followers', {
+                    headers: {
+                        Authorization: 'token ' + this.token,
+                    },
+                }).then(response => {
+                    this.followers = response.data;
+                });
+
+                axios.get('https://api.github.com/user/following', {
+                    headers: {
+                        Authorization: 'token ' + this.token,
+                    },
+                }).then(response => {
+                    this.following = response.data;
+                });
+            },
         },
 
         mounted() {
@@ -259,6 +307,8 @@
             this.getStarredList();
             // 默认显示：The Fucking Github 内容
             this.theFuckingGithub();
+            // 获取当前用户的 Following 和 Followers
+            this.getFollowingAndFollowers();
         }
     }
 </script>
@@ -307,6 +357,10 @@
             font-size: 28px;
             line-height: 40px;
             float: left;
+            margin-left: 30px;
+        }
+
+        .following-and-followers {
             margin-left: 30px;
         }
     }

@@ -20,8 +20,8 @@
 
             <!--按名称、作者、描述过滤-->
             <el-col :span="12">
-                <el-input suffix-icon="el-icon-search" placeholder="keywords" size="small"
-                          @change="filterWithKeywords" v-model="keywords">
+                <el-input prefix-icon="el-icon-search" placeholder="keywords" size="small"
+                          @input="filterWithKeywords" v-model="keywords" clearable>
                     <template slot="prepend">
                         <el-checkbox-group v-model="keywordsRange">
                             <el-checkbox label="name">Name</el-checkbox>
