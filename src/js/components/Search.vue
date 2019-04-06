@@ -31,6 +31,18 @@
                     </template>
                 </el-input>
             </el-col>
+
+            <!--按编程语言过滤-->
+            <el-col :span="3">
+                <el-select v-model="selectedLanguage" default-first-option size="small" filterable
+                           @change="filterWithLanguages" placeholder="Languages">
+                    <el-option v-for="language in languages" :key="language.value" :value="language.value"
+                               :label="language.label">
+                        <span>{{ language.label }}</span>
+                        <el-badge class="mark" type="primary" :value="language.total" />
+                    </el-option>
+                </el-select>
+            </el-col>
         </el-row>
     </el-header>
 </template>
@@ -47,6 +59,8 @@
                 keywordsRange: ['name', 'owner', 'description'],
                 keywords: '',
                 repositories: [],
+                languages: [],
+                selectedLanguage: '',
             }
         },
 
@@ -123,7 +137,50 @@
 
                 this.emit();
             },
+
+            // 按编程语言过滤
+            filterWithLanguages(value) {
+                this.repositories = db.get('repositories').value().filter(repository => {
+                    return repository.repo.language === value;
+                });
+
+                this.emit();
+            },
+
+            // 获取编程语言数据
+            getLanguages() {
+                let languages = db.get('repositories').map('repo.language').value();
+                let repositories = db.get('repositories').map('repo').value();
+
+                let data = [];
+                _.uniq(languages).forEach(language => {
+                    let count = 0;
+                    repositories.forEach(repository => {
+                        if (repository.language === language) {
+                            count++;
+                        }
+                    });
+
+                    if (language === null) {
+                        language = 'Unknown';
+                    }
+
+                    data.push({
+                        value: language,
+                        label: language,
+                        icon: language.toLowerCase().replace(' ', '-'),
+                        total: count,
+                    });
+                });
+
+                this.languages = _.orderBy(data, ['total'], 'desc');
+            },
         },
+
+        mounted() {
+            // 获取编程语言数据
+            this.getLanguages();
+        }
     }
 </script>
 
@@ -141,5 +198,10 @@
                 }
             }
         }
+    }
+    .mark {
+        float: right;
+        margin-top: 5px;
+        box-sizing: border-box;
     }
 </style>

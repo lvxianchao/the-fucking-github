@@ -278,6 +278,7 @@
                 this.repositories = repositories;
             },
 
+            // 获取 Following 和 Followers 的数据
             getFollowingAndFollowers() {
                 axios.get('https://api.github.com/user/followers', {
                     headers: {
