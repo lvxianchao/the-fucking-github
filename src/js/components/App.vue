@@ -18,8 +18,10 @@
                         <!--Following-->
                         <el-badge :value="user.following" type="primary">
                             <el-select placeholder="Following" class="following-and-followers" value="">
-                                <el-option value="" style="margin-bottom: 10px;" v-for="follower in following" :key="follower.id">
-                                    <a :href="follower.html_url" target="_blank" style="text-decoration: none; color: #666666;">
+                                <el-option value="" style="margin-bottom: 10px;" v-for="follower in following"
+                                           :key="follower.id">
+                                    <a :href="follower.html_url" target="_blank"
+                                       style="text-decoration: none; color: #666666;">
                                         <img :src="follower.avatar_url" :alt="follower.login"
                                              style="width: 30px; border-radius: 5px; margin-right: 10px; float: left;">
                                         <span>{{ follower.login }}</span>
@@ -99,42 +101,43 @@
             <el-container class="main-container">
                 <el-main class="main">
                     <el-card class="repository-container">
-                        <header>
-                            <a :href="repository.repo.html_url" target="_blank" class="full-name">
-                                <i class="fa fa-home"></i>
-                                <span>{{ repository.repo.full_name }}</span>
-                            </a>
+                        <el-header style="height: auto;">
+                            <header>
+                                <a :href="repository.repo.html_url" target="_blank" class="full-name">
+                                    <i class="fa fa-home"></i>
+                                    <span>{{ repository.repo.full_name }}</span>
+                                </a>
 
-                            <el-tooltip effect="dark" placement="top" content="Clone with HTTPS">
-                                <el-button type="info" icon="fa fa-clone" circle class="clone"></el-button>
-                            </el-tooltip>
+                                <el-tooltip effect="dark" placement="top" content="Clone with HTTPS">
+                                    <el-button type="info" icon="fa fa-clone" circle class="clone"></el-button>
+                                </el-tooltip>
 
-                            <div class="time">
-                                <div>
-                                    <i class="fa fa-clock-o"></i>
-                                    <span>Created: {{ repository.repo.created_at }}</span>
+                                <div class="time">
+                                    <div>
+                                        <i class="fa fa-clock-o"></i>
+                                        <span>Created: {{ repository.repo.created_at }}</span>
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-clock-o"></i>
+                                        <span>Updated: {{ repository.repo.updated_at }}</span>
+                                    </div>
+                                    <div v-if="repository.starred_at">
+                                        <i class="fa fa-clock-o"></i>
+                                        <span>Starred: {{ repository.starred_at.substr(0, 10) }}</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <i class="fa fa-clock-o"></i>
-                                    <span>Updated: {{ repository.repo.updated_at }}</span>
-                                </div>
-                                <div v-if="repository.starred_at">
-                                    <i class="fa fa-clock-o"></i>
-                                    <span>Starred: {{ repository.starred_at.substr(0, 10) }}</span>
-                                </div>
-                            </div>
-                        </header>
-
-                        <p class="description">{{ repository.repo.description }}</p>
-                        <Tags :repository="repository"></Tags>
-                        <el-row>
-                            <el-col :span="18">
-                                <div class="markdown-body" v-html="readmeHtml"></div>
-                            </el-col>
-                            <el-col :span="6">
-                                <Toc :markdown="readmeMarkdown"></Toc>
-                            </el-col>
-                        </el-row>
+                            </header>
+                            <p class="description">{{ repository.repo.description }}</p>
+                            <Tags :repository="repository"></Tags>
+                        </el-header>
+                        <el-container class="readme-area">
+                            <el-main>
+                                <div class="markdown-body" v-html="readmeHtmlWithAnchor"></div>
+                            </el-main>
+                            <el-aside>
+                                <Toc :readmeHtmlWithoutAnchor="readmeHtml" @render="render"></Toc>
+                            </el-aside>
+                        </el-container>
                     </el-card>
                 </el-main>
             </el-container>
@@ -168,6 +171,7 @@
                 fullscreenLoading: true,
                 following: [],
                 followers: [],
+                readmeHtmlWithAnchor: '',
             }
         },
         components: {
@@ -196,7 +200,6 @@
                 // 渲染 README.md
                 const repo = this.github.getRepo(repository.repo.owner.login, repository.repo.name);
                 repo.getReadme(repository.repo.default_branch, true, (error, markdown) => {
-                    this.readmeMarkdown = markdown;
                     const md = this.github.getMarkdown();
 
                     md.render({
@@ -205,7 +208,9 @@
                         context: repository.repo.full_name,
                     }, (error, render) => {
                         this.readmeHtml = render;
+                        this.readmeMarkdown = markdown;
                     });
+
                 });
             },
 
@@ -306,6 +311,11 @@
                     this.following = response.data;
                 });
             },
+
+            // 渲染 Readme.md
+            render(html) {
+                this.readmeHtmlWithAnchor = html;
+            }
         },
 
         mounted() {
@@ -378,13 +388,15 @@
 
     .content {
         padding: 0 5px;
+        position: fixed;
+        top: 130px;
+        bottom: 0;
+        left: 0;
+        right: 0;
 
         /*侧边栏*/
         .aside {
             width: 400px;
-            position: fixed;
-            top: 180px;
-            bottom: 0;
             overflow-x: hidden;
 
             .aside-scroll {
@@ -474,10 +486,6 @@
 
         /*主体内容*/
         .main-container {
-            position: fixed;
-            top: 180px;
-            left: 400px;
-            bottom: 0;
             right: 5px;
 
             .main {
@@ -487,61 +495,57 @@
                     height: 100%;
                     overflow-y: auto;
 
-                    header {
-                        font-size: 24px;
+                    .el-card__body {
+                        header {
+                            font-size: 24px;
 
-                        .full-name {
-                            text-decoration: none;
-                            color: #333333;
-                            margin-right: 30px;
+                            .full-name {
+                                text-decoration: none;
+                                color: #333333;
+                                margin-right: 30px;
 
-                            .el-button {
-                                font-size: 24px;
+                                .el-button {
+                                    font-size: 24px;
+                                }
+                            }
+
+                            .time {
+                                color: #cccccc;
+                                font-size: 14px;
+                                margin-top: 15px;
+
+                                div {
+                                    display: inline-block;
+                                    margin-right: 20px;
+                                }
+                            }
+
+                            .clone {
+                                float: right;
+                                cursor: pointer;
                             }
                         }
 
-                        .time {
-                            color: #cccccc;
-                            font-size: 14px;
-                            margin-top: 15px;
+                        .description {
+                            margin-top: 20px;
+                            font-size: 16px;
+                            color: #666;
+                        }
 
-                            div {
-                                display: inline-block;
-                                margin-right: 20px;
+                        .readme-area {
+                            justify-content: center;
+
+                            .el-main {
+                                max-width: 1000px;
                             }
-                        }
 
-                        .clone {
-                            float: right;
-                            cursor: pointer;
-                        }
-                    }
-
-                    .description {
-                        margin-top: 20px;
-                        font-size: 16px;
-                        color: #666;
-                    }
-
-                    /*.tags {*/
-                    /*    margin-top: 20px;*/
-
-                    /*    .el-select {*/
-                    /*        width: 100%;*/
-                    /*    }*/
-                    /*}*/
-
-                    .markdown-body {
-                        box-sizing: border-box;
-                        min-width: 800px;
-                        max-width: 980px;
-                        margin: 0 auto;
-                        padding: 45px;
-                    }
-
-                    @media (max-width: 767px) {
-                        .markdown-body {
-                            padding: 15px;
+                            .markdown-body {
+                                box-sizing: border-box;
+                                /*min-width: 780px;*/
+                                max-width: 980px;
+                                margin: 0 auto;
+                                padding: 45px;
+                            }
                         }
                     }
                 }
