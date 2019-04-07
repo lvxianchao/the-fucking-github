@@ -13,6 +13,7 @@
         "laravel-mix": "^4.0.15",
         "lodash": "^4.17.11",
         "lowdb": "^1.0.0",
+        "markdown-contents": "^1.0.11",
         "shortid": "^2.2.14",
         "vue": "^2.6.10"
     },

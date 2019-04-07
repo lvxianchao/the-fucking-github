@@ -35,7 +35,7 @@
             <!--按编程语言过滤-->
             <el-col :span="3">
                 <el-select v-model="selectedLanguage" default-first-option size="small" filterable
-                           @change="filterWithLanguages" placeholder="Languages">
+                           @change="filterWithLanguages" placeholder="Languages" clearable>
                     <el-option v-for="language in languages" :key="language.value" :value="language.value"
                                :label="language.label">
                         <span>{{ language.label }}</span>

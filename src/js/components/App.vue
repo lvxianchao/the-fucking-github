@@ -127,7 +127,14 @@
 
                         <p class="description">{{ repository.repo.description }}</p>
                         <Tags :repository="repository"></Tags>
-                        <div class="markdown-body" v-html="readme"></div>
+                        <el-row>
+                            <el-col :span="18">
+                                <div class="markdown-body" v-html="readmeHtml"></div>
+                            </el-col>
+                            <el-col :span="6">
+                                <Toc :markdown="readmeMarkdown"></Toc>
+                            </el-col>
+                        </el-row>
                     </el-card>
                 </el-main>
             </el-container>
@@ -141,6 +148,7 @@
     import axios from 'axios';
     import Tags from './Tags';
     import Search from './Search';
+    import Toc from './Toc';
 
     export default {
         name: 'App',
@@ -154,7 +162,8 @@
                 repository: {
                     repo: {}
                 },
-                readme: '',
+                readmeHtml: '',
+                readmeMarkdown: '',
                 asideCardSelectedIndex: 0,
                 fullscreenLoading: true,
                 following: [],
@@ -162,7 +171,7 @@
             }
         },
         components: {
-            Tags, Search,
+            Tags, Search, Toc,
         },
         methods: {
             // 处理语言 icon
@@ -187,6 +196,7 @@
                 // 渲染 README.md
                 const repo = this.github.getRepo(repository.repo.owner.login, repository.repo.name);
                 repo.getReadme(repository.repo.default_branch, true, (error, markdown) => {
+                    this.readmeMarkdown = markdown;
                     const md = this.github.getMarkdown();
 
                     md.render({
@@ -194,7 +204,7 @@
                         mode: 'gfm',
                         context: repository.repo.full_name,
                     }, (error, render) => {
-                        this.readme = render;
+                        this.readmeHtml = render;
                     });
                 });
             },

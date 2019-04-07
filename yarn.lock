@@ -1656,6 +1656,14 @@ content-type@~1.0.4:
   resolved "http://registry.npm.taobao.org/content-type/download/content-type-1.0.4.tgz#e138cc75e040c727b1966fe5e5f8c9aee256fe3b"
   integrity sha1-4TjMdeBAxyexlm/l5fjJruJW/js=
 
+contents@^5.0.0:
+  version "5.0.0"
+  resolved "http://registry.npm.taobao.org/contents/download/contents-5.0.0.tgz#4310b7304509659779adc1686bfde940310a063e"
+  integrity sha1-QxC3MEUJZZd5rcFoa/3pQDEKBj4=
+  dependencies:
+    lodash "^4.17.10"
+    sister "^3.0.1"
+
 convert-source-map@^0.3.3:
   version "0.3.5"
   resolved "http://registry.npm.taobao.org/convert-source-map/download/convert-source-map-0.3.5.tgz#f1d802950af7dd2631a1febe0596550c86ab3190"
@@ -3925,6 +3933,14 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
+markdown-contents@^1.0.11:
+  version "1.0.11"
+  resolved "http://registry.npm.taobao.org/markdown-contents/download/markdown-contents-1.0.11.tgz#e184d5143a2a4d86da3eac3d27ae8a194ca8f2eb"
+  integrity sha1-4YTVFDoqTYbaPqw9J66KGUyo8us=
+  dependencies:
+    contents "^5.0.0"
+    lodash "^4.17.10"
+
 md5.js@^1.3.4:
   version "1.3.5"
   resolved "http://registry.npm.taobao.org/md5.js/download/md5.js-1.3.5.tgz#b5d07b8e3216e3e27cd728d72f70d1e6a342005f"
@@ -5704,6 +5720,11 @@ simple-swizzle@^0.2.2:
   integrity sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=
   dependencies:
     is-arrayish "^0.3.1"
+
+sister@^3.0.1:
+  version "3.0.1"
+  resolved "http://registry.npm.taobao.org/sister/download/sister-3.0.1.tgz#a36ba6a1d1e46415ba16cb4ecefe14cbd8d82d1f"
+  integrity sha1-o2umodHkZBW6FstOzv4Uy9jYLR8=
 
 slash@^1.0.0:
   version "1.0.0"
