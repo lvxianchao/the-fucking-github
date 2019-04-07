@@ -291,6 +291,7 @@
             // 按条件过滤项目
             filter(repositories) {
                 this.repositories = repositories;
+                this.asideCardSelectedIndex = null;
             },
 
             // 获取 Following 和 Followers 的数据
