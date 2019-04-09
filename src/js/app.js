@@ -6,6 +6,9 @@ import App from './components/App';
 import Storage from './Storage';
 import _ from 'lodash';
 import shortid from 'shortid';
+import '../css/clipboard.css';
+import $ from 'jquery';
+import ClipboardJS from 'clipboard';
 
 window._ = _;
 window.db = Storage.db;
@@ -37,4 +40,21 @@ Vue.use(ElementUI);
 window.app = new Vue({
     el: '#app',
     render: h => h(App)
+});
+
+$(function () {
+    const clipboard = new ClipboardJS('i.copy-icon', {
+        target: trigger => {
+            return trigger.parentNode.querySelector('pre');
+        }
+    });
+
+    clipboard.on('success', e => {
+        e.trigger.parentNode.lastChild.textContent = 'Copied to clipboard success';
+        e.clearSelection();
+    });
+
+    $(document).on('mouseout', 'i.copy-icon', function (e) {
+        $(e.target).next('span.copy-tips').text('Copy to clipboard');
+    });
 });

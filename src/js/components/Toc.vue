@@ -76,6 +76,16 @@
                     });
                 });
 
+                // 注入复制代码功能
+                html.find('pre').each(function () {
+                    let pre = $(this).prop('outerHTML');
+                    let copy = $(`<div class="copy-wrap">${pre}<i class="copy-icon fa fa-clone"></i><span class="copy-tips">Copy to clipboard</span></div>`);
+
+                    $(this).replaceWith(copy);
+                });
+
+                // console.log(html.html());
+
                 this.$emit('render', html.html());
             },
         },

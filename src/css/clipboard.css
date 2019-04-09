@@ -1,0 +1,51 @@
+pre {
+    position: relative
+}
+
+.copy-wrap {
+    position: relative;
+}
+
+.copy-wrap .copy-icon {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.7
+}
+
+.copy-wrap .copy-icon:hover {
+    opacity: 1
+}
+
+.copy-wrap .copy-icon:hover + .copy-tips {
+    display: block;
+    content: 'Copy to clipboard'
+}
+
+.copy-wrap span.copy-tips::before {
+    position: absolute;
+    border: 5px solid transparent;
+    content: '';
+    top: 9px;
+    right: -13px;
+    border-left: 8px solid rgba(0, 0, 0, 0.7);
+}
+
+.copy-wrap .copy-tips {
+    position: absolute;
+    text-align: center;
+    border: 1px solid #aaa;
+    font-size: 13px;
+    background-color: #000000;
+    color: #fff;
+    padding: 5px 10px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    display: none;
+    top: 2px;
+    right: 35px;
+}
