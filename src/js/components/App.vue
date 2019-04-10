@@ -109,7 +109,8 @@
                                 </a>
 
                                 <el-tooltip effect="dark" placement="top" content="Clone with HTTPS">
-                                    <el-button type="info" icon="fa fa-clone" circle class="clone"></el-button>
+                                    <el-button type="info" icon="fa fa-clone" circle class="clone"
+                                               @click="copyCloneUrlWithHttps"></el-button>
                                 </el-tooltip>
 
                                 <div class="time">
@@ -234,7 +235,7 @@
                 let lastPage = 0;
 
                 axios.get(url, options)
-                    // 获取总页数
+                // 获取总页数
                     .then((response) => {
                         let links = response.headers.link.split(',');
                         this.starredCount = links[1].match(/&page=(\d+)/)[1];
@@ -316,7 +317,16 @@
             // 渲染 Readme.md
             render(html) {
                 this.readmeHtmlWithAnchor = html;
-            }
+            },
+
+            // 复制项目 HTTPS 克隆地址到剪切板
+            copyCloneUrlWithHttps() {
+                this.$copyText(this.repository.repo.clone_url).then(e => {
+                    this.$message.success('Copied the clone url with HTTPS to clipboard successfully.');
+                }, e => {
+                    this.$message.error('Sorry, The Fucking Github cannot copy the url.');
+                });
+            },
         },
 
         mounted() {

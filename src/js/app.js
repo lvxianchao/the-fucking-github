@@ -9,6 +9,7 @@ import shortid from 'shortid';
 import '../css/clipboard.css';
 import $ from 'jquery';
 import ClipboardJS from 'clipboard';
+import VueClipboard from 'vue-clipboard2';
 
 window._ = _;
 window.db = Storage.db;
@@ -36,6 +37,7 @@ db.defaults({
 }).write();
 
 Vue.use(ElementUI);
+Vue.use(VueClipboard);
 
 window.app = new Vue({
     el: '#app',
