@@ -39,7 +39,7 @@
                     <el-option v-for="language in languages" :key="language.value" :value="language.value"
                                :label="language.label">
                         <span>{{ language.label }}</span>
-                        <el-badge class="mark" type="primary" :value="language.total" />
+                        <el-badge class="mark" type="primary" :value="language.total"/>
                     </el-option>
                 </el-select>
             </el-col>
@@ -54,7 +54,20 @@
             return {
                 tags: db.get('tags').value(),
                 selectedTagIds: [],
-                tagStatus: db.get('tagStatus').value(),
+                tagStatus: [
+                    {
+                        value: 'all',
+                        label: 'All Repositories',
+                    },
+                    {
+                        value: 'untagged',
+                        label: 'Untagged Repositories',
+                    },
+                    {
+                        value: 'tagged',
+                        label: 'Tagged Repositories',
+                    }
+                ],
                 selectedTagStatus: 'all',
                 keywordsRange: ['name', 'owner', 'description'],
                 keywords: '',
@@ -199,6 +212,7 @@
             }
         }
     }
+
     .mark {
         float: right;
         margin-top: 5px;

@@ -10,6 +10,7 @@ import '../css/clipboard.css';
 import $ from 'jquery';
 import ClipboardJS from 'clipboard';
 import VueClipboard from 'vue-clipboard2';
+import VueLazyload from 'vue-lazyload';
 
 window._ = _;
 window.db = Storage.db;
@@ -20,24 +21,13 @@ db.defaults({
     tags: [],
     repositories: [],
     tagsAndRepositories: [],
-    tagStatus: [
-        {
-            value: 'all',
-            label: 'All Repositories',
-        },
-        {
-            value: 'untagged',
-            label: 'Untagged Repositories',
-        },
-        {
-            value: 'tagged',
-            label: 'Tagged Repositories',
-        }
-    ],
 }).write();
 
 Vue.use(ElementUI);
 Vue.use(VueClipboard);
+Vue.use(VueLazyload, {
+    loading: chrome.extension.getURL('icons/loading.gif'),
+});
 
 window.app = new Vue({
     el: '#app',

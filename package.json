@@ -18,7 +18,8 @@
         "lowdb": "^1.0.0",
         "shortid": "^2.2.14",
         "vue": "^2.6.10",
-        "vue-clipboard2": "^0.3.0"
+        "vue-clipboard2": "^0.3.0",
+        "vue-lazyload": "^1.2.6"
     },
     "scripts": {
         "dev": "npm run development",

@@ -1,13 +1,14 @@
 <template>
     <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="Loading...">
+                  element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="Loading..."
+                  v-lazy-container="{selector: 'img'}">
         <el-header class="header">
             <el-card class="header-card">
                 <el-row>
                     <el-col :span="24">
                         <!--Me-->
                         <a :href="user.html_url" target="_blank">
-                            <img class="avatar" :src="user.avatar_url" :alt="user.name">
+                            <img class="avatar" :src="src" :data-src="user.avatar_url" :alt="user.name">
                             <span class="username">{{ user.name }}</span>
                         </a>
                         <!--Starred-->
@@ -22,7 +23,7 @@
                                            :key="follower.id">
                                     <a :href="follower.html_url" target="_blank"
                                        style="text-decoration: none; color: #666666;">
-                                        <img :src="follower.avatar_url" :alt="follower.login"
+                                        <img :data-src="follower.avatar_url" :alt="follower.login"
                                              style="width: 30px; border-radius: 5px; margin-right: 10px; float: left;">
                                         <span>{{ follower.login }}</span>
                                     </a>
@@ -35,7 +36,8 @@
                                 <a :href="follower.html_url" v-for="follower in followers" :key="follower.id"
                                    target="_blank" style="text-decoration: none; color: #666666;">
                                     <el-option value="" style="margin-bottom: 10px;">
-                                        <img :src="follower.avatar_url" :alt="follower.login"
+                                        <img :src="src" :data-src="follower.avatar_url"
+                                             :alt="follower.login"
                                              style="width: 30px; border-radius: 5px; margin-right: 10px; float: left;">
                                         <span>{{ follower.login }}</span>
                                     </el-option>
@@ -47,8 +49,7 @@
             </el-card>
         </el-header>
 
-        <Search @filter="filter">
-        </Search>
+        <Search @filter="filter"></Search>
 
         <el-container class="content">
             <el-aside class="aside" style="width: 400px;">
@@ -63,7 +64,7 @@
                                              @click.native="showRepository(repository, index)"
                                              shadow="hover">
                                         <div class="owner-avatar">
-                                            <img :src="repository.repo.owner.avatar_url"
+                                            <img :src="src" :data-src="repository.repo.owner.avatar_url"
                                                  :alt="repository.repo.owner.login">
                                         </div>
                                         <span class="owner-name">{{ repository.repo.owner.login }}</span>
@@ -73,7 +74,7 @@
 
                                         <div>
                                             <div class="language">
-                                                <img :src="languageIcon(repository.repo.language)">
+                                                <img :src="src" :data-src="languageIcon(repository.repo.language)">
                                                 <div>{{ repository.repo.language ? repository.repo.language : 'unknown' }}</div>
                                             </div>
                                             <div class="starred-at">
@@ -158,6 +159,7 @@
         name: 'App',
         data() {
             return {
+                src: chrome.extension.getURL('icons/loading.gif'),
                 token: '',
                 github: {},
                 user: {},
