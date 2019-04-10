@@ -27,6 +27,7 @@ Vue.use(ElementUI);
 Vue.use(VueClipboard);
 Vue.use(VueLazyload, {
     loading: chrome.extension.getURL('icons/loading.gif'),
+    dispatchEvent: true,
 });
 
 window.app = new Vue({

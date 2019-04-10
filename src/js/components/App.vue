@@ -1,11 +1,13 @@
 <template>
-    <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="Loading..."
-                  v-lazy-container="{selector: 'img'}">
+    <el-container v-lazy-container="{selector: 'img'}">
+        <!--v-loading.fullscreen.lock="fullscreenLoading" element-loading-spinner="el-icon-loading"-->
+        <!--element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="Loading..."-->
         <el-header class="header">
             <el-card class="header-card">
                 <el-row>
                     <el-col :span="24">
+                        <!--Loading-->
+
                         <!--Me-->
                         <a :href="user.html_url" target="_blank">
                             <img class="avatar" :src="src" :data-src="user.avatar_url" :alt="user.name">
@@ -164,7 +166,7 @@
                 github: {},
                 user: {},
                 starredCount: '',
-                repositories: [],
+                repositories: db.get('repositories').value(),
                 repository: {
                     repo: {}
                 },
@@ -187,7 +189,7 @@
                     language = 'unknown'
                 }
 
-                return 'icons/languages/' + language.toLowerCase() + '.png';
+                return chrome.extension.getURL('icons/languages/' + language.toLowerCase() + '.png');
             },
 
             // 当点击左侧内的项目卡片时，显示项目相关内容
@@ -248,7 +250,7 @@
                         options.params.page = 1;
                         options.params.per_page = 100;
 
-                        await axios.get(url, options).then((response) => {
+                        await axios.get(url, options).then(response => {
                             this.fullscreenLoading = false;
                             this.repositories = response.data;
                         });
