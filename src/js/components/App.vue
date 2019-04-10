@@ -234,7 +234,7 @@
                 let lastPage = 0;
 
                 axios.get(url, options)
-                // 获取总页数
+                    // 获取总页数
                     .then((response) => {
                         let links = response.headers.link.split(',');
                         this.starredCount = links[1].match(/&page=(\d+)/)[1];
