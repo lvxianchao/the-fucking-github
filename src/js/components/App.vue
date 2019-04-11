@@ -1,16 +1,21 @@
 <template>
-    <el-container v-lazy-container="{selector: 'img'}">
+    <el-container>
         <!--v-loading.fullscreen.lock="fullscreenLoading" element-loading-spinner="el-icon-loading"-->
         <!--element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="Loading..."-->
         <el-header class="header">
             <el-card class="header-card">
                 <el-row>
                     <el-col :span="24">
-                        <!--Loading-->
+                        <!--Logo-->
+                        <el-tooltip content="The Fucking Github" placement="bottom-start">
+                            <a href="https://github.com/lvxianchao/the-fucking-github" target="_blank" class="logo">
+                                <img :src="loading ? loadingImgSrc : logoImgSrc" alt="The Fucking Github">
+                            </a>
+                        </el-tooltip>
 
                         <!--Me-->
                         <a :href="user.html_url" target="_blank">
-                            <img class="avatar" :src="src" :data-src="user.avatar_url" :alt="user.name">
+                            <img class="avatar" :src="user.avatar_url" :data-src="user.avatar_url" :alt="user.name">
                             <span class="username">{{ user.name }}</span>
                         </a>
                         <!--Starred-->
@@ -38,7 +43,7 @@
                                 <a :href="follower.html_url" v-for="follower in followers" :key="follower.id"
                                    target="_blank" style="text-decoration: none; color: #666666;">
                                     <el-option value="" style="margin-bottom: 10px;">
-                                        <img :src="src" :data-src="follower.avatar_url"
+                                        <img :src="loadingImgSrc" :data-src="follower.avatar_url"
                                              :alt="follower.login"
                                              style="width: 30px; border-radius: 5px; margin-right: 10px; float: left;">
                                         <span>{{ follower.login }}</span>
@@ -51,9 +56,9 @@
             </el-card>
         </el-header>
 
-        <Search @filter="filter"></Search>
+        <Search @filter="filter" @loading="changeLoadingStatus"></Search>
 
-        <el-container class="content">
+        <el-container class="content" v-lazy-container="{selector: 'img'}">
             <el-aside class="aside" style="width: 400px;">
                 <div class="aside-scroll">
                     <el-card class="aside-card">
@@ -66,7 +71,7 @@
                                              @click.native="showRepository(repository, index)"
                                              shadow="hover">
                                         <div class="owner-avatar">
-                                            <img :src="src" :data-src="repository.repo.owner.avatar_url"
+                                            <img :src="loadingImgSrc" :data-src="repository.repo.owner.avatar_url"
                                                  :alt="repository.repo.owner.login">
                                         </div>
                                         <span class="owner-name">{{ repository.repo.owner.login }}</span>
@@ -76,7 +81,8 @@
 
                                         <div>
                                             <div class="language">
-                                                <img :src="src" :data-src="languageIcon(repository.repo.language)">
+                                                <img :src="loadingImgSrc"
+                                                     :data-src="languageIcon(repository.repo.language)">
                                                 <div>{{ repository.repo.language ? repository.repo.language : 'unknown' }}</div>
                                             </div>
                                             <div class="starred-at">
@@ -161,7 +167,9 @@
         name: 'App',
         data() {
             return {
-                src: chrome.extension.getURL('icons/loading.gif'),
+                loading: true,
+                loadingImgSrc: chrome.extension.getURL('icons/loading.gif'),
+                logoImgSrc: chrome.extension.getURL('icons/128.png'),
                 token: '',
                 github: {},
                 user: {},
@@ -183,6 +191,11 @@
             Tags, Search, Toc,
         },
         methods: {
+            // 更新加载状态
+            changeLoadingStatus(status) {
+                this.loading = status;
+            },
+
             // 处理语言 icon
             languageIcon(language) {
                 if (!language) {
@@ -251,7 +264,6 @@
                         options.params.per_page = 100;
 
                         await axios.get(url, options).then(response => {
-                            this.fullscreenLoading = false;
                             this.repositories = response.data;
                         });
                     })
@@ -273,6 +285,7 @@
 
                                 // 填充项目表
                                 db.set('repositories', this.repositories).write();
+                                this.loading = false;
                             });
                     });
             },
@@ -367,37 +380,51 @@
 
         .el-card__body {
             padding: 10px 20px;
-        }
 
-        a {
-            text-decoration: none;
-            color: #333;
-
-            .avatar {
+            .logo {
+                float: left;
+                display: inline-block;
                 width: 40px;
                 height: 40px;
-                border-radius: 50%;
-                float: left;
+                overflow: hidden;
                 margin-right: 10px;
+                outline: none;
+
+                img {
+                    width: 100%;
+                }
             }
 
-            .username {
-                height: 40px;
-                line-height: 40px;
+            a {
+                text-decoration: none;
+                color: #333;
+
+                .avatar {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    float: left;
+                    margin-right: 10px;
+                }
+
+                .username {
+                    height: 40px;
+                    line-height: 40px;
+                    font-size: 28px;
+                    float: left;
+                }
+            }
+
+            .starred {
                 font-size: 28px;
+                line-height: 40px;
                 float: left;
+                margin-left: 30px;
             }
-        }
 
-        .starred {
-            font-size: 28px;
-            line-height: 40px;
-            float: left;
-            margin-left: 30px;
-        }
-
-        .following-and-followers {
-            margin-left: 30px;
+            .following-and-followers {
+                margin-left: 30px;
+            }
         }
     }
 
@@ -556,8 +583,7 @@
 
                             .markdown-body {
                                 box-sizing: border-box;
-                                /*min-width: 780px;*/
-                                max-width: 980px;
+                                max-width: 935px;
                                 margin: 0 auto;
                                 padding: 45px;
                             }

@@ -30,6 +30,7 @@ Vue.use(VueLazyload, {
     dispatchEvent: true,
 });
 
+window.loading = true;
 window.app = new Vue({
     el: '#app',
     render: h => h(App)
