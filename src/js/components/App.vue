@@ -54,7 +54,7 @@
             </el-card>
         </el-header>
 
-        <Search @filter="filter"></Search>
+        <Search @filter="filter" :starredCount="starredCount"></Search>
 
         <el-container class="content" v-lazy-container="{selector: 'img'}">
             <el-aside class="aside" style="width: 400px;">
@@ -171,7 +171,7 @@
                 token: '',
                 github: {},
                 user: {},
-                starredCount: '',
+                starredCount: 0,
                 repositories: db.get('repositories').value(),
                 repository: {
                     repo: {}

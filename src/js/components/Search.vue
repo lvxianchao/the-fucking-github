@@ -6,15 +6,22 @@
                 <el-select v-model="selectedTagStatus" default-first-option size="small"
                            @change="filterWithTagStatus">
                     <el-option v-for="status in tagStatus" :key="status.value" :value="status.value"
-                               :label="status.label"></el-option>
+                               :label="status.label">
+                        <span>{{ status.label }}</span>
+                        <el-badge :value="status.count" class="mark" type="primary"></el-badge>
+                    </el-option>
                 </el-select>
             </el-col>
 
             <!--按标签过滤-->
             <el-col :span="6">
                 <el-select v-model="selectedTagIds" multiple filterable default-first-option
-                           placeholder="Filter with tags" size="small" clearable @change="filterWithTags">
-                    <el-option v-for="tag in tags" :key="tag.id" :value="tag.id" :label="tag.name"></el-option>
+                           placeholder="Filter with tags" size="small" clearable @change="filterWithTags"
+                           no-data-text="no data" no-match-text="no match data">
+                    <el-option v-for="tag in tags" :key="tag.id" :value="tag.id" :label="tag.name">
+                        <span>{{ tag.name }}</span>
+                        <el-badge :value="repositoriesCountOfTag(tag.id)" type="primary" class="mark"></el-badge>
+                    </el-option>
                 </el-select>
             </el-col>
 
@@ -35,7 +42,8 @@
             <!--按编程语言过滤-->
             <el-col :span="3">
                 <el-select v-model="selectedLanguage" default-first-option size="small" filterable
-                           @change="filterWithLanguages" placeholder="Languages" clearable>
+                           @change="filterWithLanguages" placeholder="Languages" clearable no-data-text="no data"
+                           no-match-text="no match data">
                     <el-option v-for="language in languages" :key="language.value" :value="language.value"
                                :label="language.label">
                         <span>{{ language.label }}</span>
@@ -50,6 +58,11 @@
 <script>
     export default {
         name: 'Search',
+        props: {
+            starredCount: {
+                require: true,
+            },
+        },
         data() {
             return {
                 tags: db.get('tags').value(),
@@ -58,14 +71,17 @@
                     {
                         value: 'all',
                         label: 'All Repositories',
+                        count: 0,
                     },
                     {
                         value: 'untagged',
                         label: 'Untagged Repositories',
+                        count: 0,
                     },
                     {
                         value: 'tagged',
                         label: 'Tagged Repositories',
+                        count: 0,
                     }
                 ],
                 selectedTagStatus: 'all',
@@ -75,6 +91,10 @@
                 languages: [],
                 selectedLanguage: '',
             }
+        },
+
+        computed: {
+
         },
 
         methods: {
@@ -188,11 +208,24 @@
 
                 this.languages = _.orderBy(data, ['total'], 'desc');
             },
+
+            repositoriesCountOfTag(tagId) {
+                return db.get('tagsAndRepositories').filter({tagId: tagId}).value().length;
+            }
         },
 
         mounted() {
             // 获取编程语言数据
             this.getLanguages();
+        },
+
+        watch: {
+            starredCount() {
+                // 获取处于各种状态的项目数量
+                this.tagStatus[0].count = this.starredCount;
+                this.tagStatus[2].count = db.get('tagsAndRepositories').value().length;
+                this.tagStatus[1].count = this.starredCount - this.tagStatus[2].count;
+            }
         }
     }
 </script>
@@ -217,5 +250,6 @@
         float: right;
         margin-top: 5px;
         box-sizing: border-box;
+        margin-left: 15px;
     }
 </style>
