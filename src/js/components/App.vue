@@ -229,6 +229,7 @@
                         this.readmeHtml = render;
                         this.readmeMarkdown = markdown;
                         this.readmeLoading = false;
+                        document.querySelector('.repository-container').scrollTop = 0;
                     });
                 });
             },
