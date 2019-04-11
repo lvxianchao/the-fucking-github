@@ -1,7 +1,5 @@
 <template>
     <el-container>
-        <!--v-loading.fullscreen.lock="fullscreenLoading" element-loading-spinner="el-icon-loading"-->
-        <!--element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="Loading..."-->
         <el-header class="header">
             <el-card class="header-card">
                 <el-row>
@@ -56,7 +54,7 @@
             </el-card>
         </el-header>
 
-        <Search @filter="filter" @loading="changeLoadingStatus"></Search>
+        <Search @filter="filter"></Search>
 
         <el-container class="content" v-lazy-container="{selector: 'img'}">
             <el-aside class="aside" style="width: 400px;">
@@ -107,7 +105,7 @@
                 </div>
             </el-aside>
 
-            <el-container class="main-container">
+            <el-container class="main-container" v-loading="readmeLoading">
                 <el-main class="main">
                     <el-card class="repository-container">
                         <el-header style="height: auto;">
@@ -185,6 +183,7 @@
                 following: [],
                 followers: [],
                 readmeHtmlWithAnchor: '',
+                readmeLoading: true,
             }
         },
         components: {
@@ -207,6 +206,8 @@
 
             // 当点击左侧内的项目卡片时，显示项目相关内容
             showRepository(repository, index) {
+                this.readmeLoading = true;
+
                 // 侧边栏卡片添加选中样式
                 this.asideCardSelectedIndex = index;
 
@@ -227,8 +228,8 @@
                     }, (error, render) => {
                         this.readmeHtml = render;
                         this.readmeMarkdown = markdown;
+                        this.readmeLoading = false;
                     });
-
                 });
             },
 
