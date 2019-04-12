@@ -22,33 +22,9 @@
                             <span>{{ starredCount }}</span>
                         </div>
                         <!--Following-->
-                        <el-badge :value="user.following" type="primary">
-                            <el-select placeholder="Following" class="following-and-followers" value="">
-                                <el-option value="" style="margin-bottom: 10px;" v-for="follower in following"
-                                           :key="follower.id">
-                                    <a :href="follower.html_url" target="_blank"
-                                       style="text-decoration: none; color: #666666;">
-                                        <img :data-src="follower.avatar_url" :alt="follower.login"
-                                             style="width: 30px; border-radius: 5px; margin-right: 10px; float: left;">
-                                        <span>{{ follower.login }}</span>
-                                    </a>
-                                </el-option>
-                            </el-select>
-                        </el-badge>
+                        <Followers placeholder="Following" :followers="following"></Followers>
                         <!--Followers-->
-                        <el-badge :value="user.followers" type="primary">
-                            <el-select placeholder="Followers" class="following-and-followers" value="">
-                                <a :href="follower.html_url" v-for="follower in followers" :key="follower.id"
-                                   target="_blank" style="text-decoration: none; color: #666666;">
-                                    <el-option value="" style="margin-bottom: 10px;">
-                                        <img :src="loadingImgSrc" :data-src="follower.avatar_url"
-                                             :alt="follower.login"
-                                             style="width: 30px; border-radius: 5px; margin-right: 10px; float: left;">
-                                        <span>{{ follower.login }}</span>
-                                    </el-option>
-                                </a>
-                            </el-select>
-                        </el-badge>
+                        <Followers placeholder="Followers" :followers="followers"></Followers>
                     </el-col>
                 </el-row>
             </el-card>
@@ -160,6 +136,7 @@
     import Tags from './Tags';
     import Search from './Search';
     import Toc from './Toc';
+    import Followers from './Followers';
 
     export default {
         name: 'App',
@@ -187,7 +164,7 @@
             }
         },
         components: {
-            Tags, Search, Toc,
+            Tags, Search, Toc, Followers,
         },
         methods: {
             // 更新加载状态
@@ -421,10 +398,6 @@
                 font-size: 28px;
                 line-height: 40px;
                 float: left;
-                margin-left: 30px;
-            }
-
-            .following-and-followers {
                 margin-left: 30px;
             }
         }
