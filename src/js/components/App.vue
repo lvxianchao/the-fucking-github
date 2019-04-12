@@ -59,6 +59,7 @@
         <el-container class="content" v-lazy-container="{selector: 'img'}">
             <el-aside class="aside" style="width: 400px;">
                 <div class="aside-scroll">
+                    <el-badge :value="this.repositories.length" type="primary" class="repositories-count"/>
                     <el-card class="aside-card">
                         <el-row>
                             <el-col :span="24">
@@ -104,7 +105,6 @@
                     </el-card>
                 </div>
             </el-aside>
-
             <el-container class="main-container" v-loading="readmeLoading">
                 <el-main class="main">
                     <el-card class="repository-container">
@@ -447,6 +447,21 @@
                 width: 420px;
                 overflow-x: hidden;
                 height: 100%;
+
+                .repositories-count {
+                    .el-badge__content {
+                        width: 400px;
+                        position: fixed;
+                        top: 130px;
+                        z-index: 100;
+                        -webkit-border-radius: 3px;
+                        -moz-border-radius: 3px;
+                        border-radius: 3px;
+                        border: 1px dashed blueviolet;
+                        background: #ffffff;
+                        color: blueviolet;
+                    }
+                }
 
                 .aside-card {
                     width: 400px;
