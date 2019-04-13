@@ -14,16 +14,16 @@ import VueLazyload from 'vue-lazyload';
 
 window.db = Storage.db;
 window.shortid = shortid;
+window._ = _;
 
 chrome.storage.sync.get(items => {
     db.defaults({
         token: items.token,
-        tags: [],
+        tags: items.tags ? items.tags : [],
         repositories: [],
-        tagsAndRepositories: [],
+        tagsAndRepositories: items.tagsAndRepositories ? items.tagsAndRepositories : [],
     }).write();
 
-    Vue.use(_);
     Vue.use(ElementUI);
     Vue.use(VueClipboard);
     Vue.use(VueLazyload, {

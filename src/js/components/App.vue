@@ -165,6 +165,7 @@
                 readmeHtmlWithAnchor: '',
                 readmeLoading: true,
                 hasSearchOnline: false,
+                storage: window.localStorage.getItem('TheFuckingGithub'),
             }
         },
         components: {
@@ -380,7 +381,7 @@
             this.theFuckingGithub();
             // 获取当前用户的 Following 和 Followers
             this.getFollowingAndFollowers();
-        }
+        },
     }
 </script>
 
