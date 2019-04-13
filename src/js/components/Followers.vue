@@ -1,5 +1,5 @@
 <template>
-    <el-badge :value="followers.length" type="primary">
+    <el-badge :value="followers.length" type="primary" class="badge">
         <el-select :placeholder="placeholder" class="following-and-followers" value="">
             <el-option value="" style="margin-bottom: 10px;" v-for="follower in followers"
                        :key="follower.id">
@@ -34,8 +34,12 @@
     }
 </script>
 
-<style scoped>
-    .following-and-followers {
-        margin-left: 30px;
+<style scoped lang="scss">
+    .badge {
+        float: left;
+
+        .following-and-followers {
+            margin-left: 30px;
+        }
     }
 </style>

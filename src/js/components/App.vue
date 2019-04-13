@@ -10,7 +10,6 @@
                                 <img :src="loading ? loadingImgSrc : logoImgSrc" alt="The Fucking Github">
                             </a>
                         </el-tooltip>
-
                         <!--Me-->
                         <a :href="user.html_url" target="_blank">
                             <img class="avatar" :src="user.avatar_url" :data-src="user.avatar_url" :alt="user.name">
@@ -25,6 +24,8 @@
                         <Followers placeholder="Following" :followers="following"></Followers>
                         <!--Followers-->
                         <Followers placeholder="Followers" :followers="followers"></Followers>
+                        <!--Search Online-->
+                        <SearchOnline @searchOnlineResult="searchOnlineResult"></SearchOnline>
                     </el-col>
                 </el-row>
             </el-card>
@@ -137,6 +138,7 @@
     import Search from './Search';
     import Toc from './Toc';
     import Followers from './Followers';
+    import SearchOnline from './SearchOnline';
 
     export default {
         name: 'App',
@@ -161,10 +163,11 @@
                 followers: [],
                 readmeHtmlWithAnchor: '',
                 readmeLoading: true,
+                hasSearchOnline: false,
             }
         },
         components: {
-            Tags, Search, Toc, Followers,
+            Tags, Search, Toc, Followers, SearchOnline,
         },
         methods: {
             // 更新加载状态
@@ -237,20 +240,11 @@
                         this.starredCount = links[1].match(/&page=(\d+)/)[1];
                         lastPage = Math.ceil(this.starredCount / 100);
                     })
-                    // 优先获取第一页的数据渲染
-                    .then(async () => {
-                        options.params.page = 1;
-                        options.params.per_page = 100;
-
-                        await axios.get(url, options).then(response => {
-                            this.repositories = response.data;
-                        });
-                    })
                     // 获取后续页码的数据
                     .then(async () => {
                         let promises = [];
 
-                        for (let i = 2; i <= lastPage; i++) {
+                        for (let i = 1; i <= lastPage; i++) {
                             options.params.page = await i;
                             options.params.per_page = 100;
                             promises.push(axios.get(url, options));
@@ -258,12 +252,17 @@
 
                         axios.all(promises)
                             .then((results) => {
+                                let data = [];
                                 results.forEach((response) => {
-                                    this.repositories = _.concat(this.repositories, response.data);
+                                    data = _.concat(data, response.data);
                                 });
 
                                 // 填充项目表
-                                db.set('repositories', this.repositories).write();
+                                db.set('repositories', data).write();
+                                // 如果没有启用在线搜索，则更新项目区
+                                if (!this.hasSearchOnline) {
+                                    this.repositories = data;
+                                }
                                 this.loading = false;
                             });
                     });
@@ -323,6 +322,13 @@
                     this.$message.error('Sorry, The Fucking Github cannot copy the url.');
                 });
             },
+
+            searchOnlineResult(result, status) {
+                this.repositories = result;
+
+                // 阻止未加载完的 Star 覆盖项目区
+                this.hasSearchOnline = status;
+            }
         },
 
         mounted() {
