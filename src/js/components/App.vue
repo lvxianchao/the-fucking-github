@@ -1,5 +1,5 @@
 <template>
-    <el-container>
+    <el-container v-if="hasToken">
         <el-header class="header">
             <el-card class="header-card">
                 <el-row>
@@ -144,6 +144,7 @@
         name: 'App',
         data() {
             return {
+                hasToken: false,
                 loading: true,
                 loadingImgSrc: chrome.extension.getURL('icons/loading.gif'),
                 logoImgSrc: chrome.extension.getURL('icons/128.png'),
@@ -280,6 +281,13 @@
             // 获取当前用户信息
             getUserInfo() {
                 this.github.getUser().getProfile((error, result) => {
+                    if (!result) {
+                        db.set('token', '').write();
+                        chrome.storage.sync.set({'token': ''});
+                        alert('Sorry, the Access Token is invalid, please check it again.');
+                        window.close();
+                    }
+
                     this.user = result;
                 });
             },
@@ -323,16 +331,45 @@
                 });
             },
 
+            // 搜索在线项目
             searchOnlineResult(result, status) {
                 this.repositories = result;
 
                 // 阻止未加载完的 Star 覆盖项目区
                 this.hasSearchOnline = status;
+            },
+
+            // 获取用户 Github 授权 Token
+            getToken() {
+                let html = '<a target="_blank" href="https://github.com/lvxianchao/the-fucking-github" style="text-decoration: none; color: blueviolet;"><strong>How to get the token?</strong></a>';
+                this.$prompt(html, 'Github Access Token', {
+                    confirmButtonText: 'Done',
+                    showCancelButton: false,
+                    showClose: false,
+                    dangerouslyUseHTMLString: true,
+                    closeOnClickModal: false,
+                    closeOnPressEscape: false,
+                    inputValidator: value => {
+                        if (!value || value.length !== 40) {
+                            return false;
+                        }
+                    },
+                    inputErrorMessage: 'Please input the Access Token',
+                }).then(({value}) => {
+                    chrome.storage.sync.set({'token': value});
+                    this.token = value;
+                    db.set('token', value).write();
+                    window.location.reload();
+                });
             }
         },
 
         mounted() {
             this.token = db.get('token').value();
+            if (!this.token) {
+                return this.getToken();
+            }
+            this.hasToken = true;
             this.github = new Github({token: this.token});
 
             // 获取用户信息

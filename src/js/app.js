@@ -12,28 +12,29 @@ import ClipboardJS from 'clipboard';
 import VueClipboard from 'vue-clipboard2';
 import VueLazyload from 'vue-lazyload';
 
-window._ = _;
 window.db = Storage.db;
 window.shortid = shortid;
 
-db.defaults({
-    token: window.localStorage.getItem('token'),
-    tags: [],
-    repositories: [],
-    tagsAndRepositories: [],
-}).write();
+chrome.storage.sync.get(items => {
+    db.defaults({
+        token: items.token,
+        tags: [],
+        repositories: [],
+        tagsAndRepositories: [],
+    }).write();
 
-Vue.use(ElementUI);
-Vue.use(VueClipboard);
-Vue.use(VueLazyload, {
-    loading: chrome.extension.getURL('icons/loading.gif'),
-    dispatchEvent: true,
-});
+    Vue.use(_);
+    Vue.use(ElementUI);
+    Vue.use(VueClipboard);
+    Vue.use(VueLazyload, {
+        loading: chrome.extension.getURL('icons/loading.gif'),
+        dispatchEvent: true,
+    });
 
-window.loading = true;
-window.app = new Vue({
-    el: '#app',
-    render: h => h(App)
+    window.app = new Vue({
+        el: '#app',
+        render: h => h(App)
+    });
 });
 
 $(function () {
