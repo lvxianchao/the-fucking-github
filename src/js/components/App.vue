@@ -26,6 +26,8 @@
                         <Followers placeholder="Followers" :followers="followers"></Followers>
                         <!--Search Online-->
                         <SearchOnline @searchOnlineResult="searchOnlineResult"></SearchOnline>
+                        <!--Donate-->
+                        <Donate></Donate>
                     </el-col>
                 </el-row>
             </el-card>
@@ -139,6 +141,7 @@
     import Toc from './Toc';
     import Followers from './Followers';
     import SearchOnline from './SearchOnline';
+    import Donate from './Donate';
 
     export default {
         name: 'App',
@@ -169,7 +172,7 @@
             }
         },
         components: {
-            Tags, Search, Toc, Followers, SearchOnline,
+            Tags, Search, Toc, Followers, SearchOnline, Donate,
         },
         methods: {
             // 更新加载状态
