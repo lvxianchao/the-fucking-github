@@ -1,7 +1,7 @@
 <template>
     <div class="tags" v-show="repository.starred_at">
         <el-select v-model="selected" multiple filterable allow-create default-first-option placeholder="add tags"
-                   @change="tagsAndRepositories">
+                   @change="tagsAndRepositories" no-match-text="no match data" no-data-text="no data">
             <el-option v-for="tag in tags" :key="tag.id" :value="tag.id" :label="tag.name"></el-option>
         </el-select>
     </div>
@@ -33,7 +33,7 @@
                 tagsAndRepositories.remove({repositoryId: this.repository.repo.id}).write();
 
                 // 遍历当前项目标签，处理标签表和关联表
-                tags.forEach((item, index) => {
+                tags.forEach(item => {
                     // 当前用户所有的标签数据
                     let tagIds = db.get('tags').map('id').value();
                     let tagNames = db.get('tags').map('name').value();
@@ -53,17 +53,15 @@
                     };
                     tagsAndRepositories.push(data).write();
                 });
-            }, // tagsAndRepositories
-        }, // methods
+            },
+        },
 
         watch: {
             // 监听到项目变化时，显示项目已打过的标签
             repository: function (n, o) {
                 this.selected = db.get('tagsAndRepositories').filter({repositoryId: this.repository.repo.id}).map('tagId').value();
             }
-        }, // watch
-
-
+        },
     }
 </script>
 
