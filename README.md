@@ -4,6 +4,8 @@ A Chrome browser extension. View starred repositories, organizing stars, searchi
 
 ![The Fucking Github](https://user-images.githubusercontent.com/22412818/56089456-8980d200-5ec5-11e9-9e6e-820677beefb8.png)
 
+[中文说明](https://coderlxc.com/2019/04/14/The-Fucking-Github/)
+
 ## What
 
 Do you have a lot of starred repositories and often need to look through them, but each time you need to open a new tab to enter `https://github.com` and click on the avatar on the right and click on `your stars`, then you can finally see your stars.
