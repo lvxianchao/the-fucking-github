@@ -1,4 +1,4 @@
-# The Fuking Github
+# The Fucking Github
 
 A Chrome browser extension. View starred repositories, organizing stars, searching stars and searching repositories online for Github.
 
