@@ -84,7 +84,7 @@
                     </el-card>
                 </div>
             </el-aside>
-            <el-container class="main-container" v-loading="readmeLoading">
+            <el-container class="main-container">
                 <el-main class="main">
                     <el-card class="repository-container">
                         <el-header style="height: auto;">
@@ -117,7 +117,7 @@
                             <p class="description">{{ repository.repo.description }}</p>
                             <Tags :repository="repository"></Tags>
                         </el-header>
-                        <el-container class="readme-area">
+                        <el-container class="readme-area" v-loading="readmeLoading">
                             <el-main>
                                 <div class="markdown-body" v-html="readmeHtmlWithAnchor"></div>
                             </el-main>

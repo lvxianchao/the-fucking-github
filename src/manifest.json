@@ -20,7 +20,6 @@
         "tabs",
         "https://api.github.com/*"
     ],
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "background": {
         "scripts": [
             "js/background.js"
