@@ -34,6 +34,9 @@
 
                 // 遍历当前项目标签，处理标签表和关联表
                 tags.forEach(item => {
+                    // 关联表的标签 ID
+                    let tagId = '';
+
                     // 当前用户所有的标签数据
                     let tagIds = db.get('tags').map('id').value();
                     let tagNames = db.get('tags').map('name').value();
@@ -42,16 +45,24 @@
                     if (_.indexOf(tagIds, item) === -1) {
                         if (_.indexOf(tagNames, item) === -1) {
                             // 标签集合处理：如果新添加标签不在标签集合里则添加进集合
-                            this.tags.push({id: shortid.generate(), name: item});
+                            tagId = shortid.generate();
+                            this.tags.push({id: tagId, name: item});
+                        } else {
+                            tagId = db.get('tags').find({name: item}).value().id;
                         }
+                    } else {
+                        tagId = item;
                     }
 
                     // 写入关联数据
-                    let data = {
-                        tagId: db.get('tags').find({name: item}).value().id,
-                        repositoryId: this.repository.repo.id
-                    };
-                    tagsAndRepositories.push(data).write();
+                    let relationTagIds = tagsAndRepositories.filter({repositoryId: this.repository.repo.id}).map('tagId').value();
+                    if (_.indexOf(relationTagIds, tagId) === -1) {
+                        let data = {
+                            tagId: tagId,
+                            repositoryId: this.repository.repo.id
+                        };
+                        tagsAndRepositories.push(data).write();
+                    }
                 });
             },
         },
