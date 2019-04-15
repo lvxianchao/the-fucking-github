@@ -93,8 +93,9 @@
             }
         },
 
-        computed: {
-
+        created() {
+            // 按照 Name, Owner, Description 过滤时延时 300 ms
+            this.filterWithKeywords = _.debounce(this.filterWithKeywordsWithDebounce, 300);
         },
 
         methods: {
@@ -149,7 +150,7 @@
             },
 
             // 按关键字过滤项目
-            filterWithKeywords(keywords) {
+            filterWithKeywordsWithDebounce(keywords) {
                 this.repositories = db.get('repositories').value().filter(repository => {
                     if (_.indexOf(this.keywordsRange, 'name') !== -1) {
                         if (repository.repo.name.includes(keywords)) {
