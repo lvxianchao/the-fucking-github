@@ -2,7 +2,7 @@
     <el-input placeholder="Search online" v-model="keywords" clearable
               @keyup.enter.native="search" @clear="clear">
         <template slot="prepend">
-            <img :src="loadingImgSrc" class="loading" v-show="loading">
+            <img :src="loadingImgSrc" class="loading" v-show="loading" alt="">
             <i class="el-icon-search" v-show="!loading"></i>
         </template>
     </el-input>
@@ -20,10 +20,12 @@
                 loadingImgSrc: chrome.extension.getURL('icons/loading.gif'),
             };
         },
+
         methods: {
+            // 在线搜索
             search() {
                 if (!this.keywords) {
-                    this.clear();
+                    return this.clear();
                 }
 
                 this.loading = true;
@@ -54,6 +56,7 @@
                 });
             },
 
+            // 清除在线搜索的结果，恢复已 star 的项目列表
             clear() {
                 this.$emit('searchOnlineResult', db.get('repositories').value(), false);
             }
