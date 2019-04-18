@@ -34,9 +34,8 @@
         </el-header>
 
         <Search @filter="filter" :starredCount="starredCount"></Search>
-        <!--v-lazy-container="{selector: 'img'}"-->
-        <el-container class="content" v-lazy-container="{selector: 'img'}">
-            <el-aside class="aside" style="width: 400px;">
+        <el-container class="content">
+            <el-aside class="aside" style="width: 400px;" v-lazy-container="{selector: 'img'}">
                 <div class="aside-scroll">
                     <el-badge :value="this.repositories.length" type="primary" class="repositories-count"/>
                     <el-card class="aside-card">
@@ -48,9 +47,9 @@
                                          @click.native="showRepository(repository, index)"
                                          shadow="hover">
                                     <div class="owner-avatar">
-                                        <img :src="loadingImgSrc" :data-src="repository.repo.owner.avatar_url"
-                                             :alt="repository.repo.owner.login"
-                                             :key="repository.repo.owner.avatar_url">
+                                        <img :alt="repository.repo.owner.login"
+                                             :data-src="repository.repo.owner.avatar_url"
+                                             :src="repository.repo.owner.avatar_url">
                                     </div>
                                     <span class="owner-name">{{ repository.repo.owner.login }}</span>
                                     <div class="repository-name">{{ repository.repo.name }}</div>
@@ -59,9 +58,9 @@
 
                                     <div>
                                         <div class="language">
-                                            <img :src="loadingImgSrc"
-                                                 :data-src="languageIcon(repository.repo.language)"
-                                                 :alt="repository.repo.language">
+                                            <img :src="languageIcon(repository.repo.language)"
+                                                 :alt="repository.repo.language"
+                                                 :data-src="languageIcon(repository.repo.language)">
                                             <div>{{ repository.repo.language ? repository.repo.language : 'unknown' }}</div>
                                         </div>
                                         <div class="starred-at">

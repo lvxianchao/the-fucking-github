@@ -19,7 +19,7 @@
         "unlimitedStorage",
         "activeTab",
         "tabs",
-        "https://api.github.com/*",
+        "https://*.github.com/*",
         "https://*.githubusercontent.com/*"
     ],
     "background": {

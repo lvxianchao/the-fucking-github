@@ -31,8 +31,6 @@ low(new ChromeStorage('TheFuckingGithub')).then(db => {
         Vue.use(VueClipboard);
         Vue.use(VueLazyload, {
             loading: chrome.extension.getURL('icons/loading.gif'),
-            dispatchEvent: true,
-            lazyComponent: true,
         });
 
         window.app = new Vue({
