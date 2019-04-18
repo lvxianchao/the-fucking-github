@@ -1449,6 +1449,11 @@ chownr@^1.1.1:
   resolved "http://registry.npm.taobao.org/chownr/download/chownr-1.1.1.tgz#54726b8b8fff4df053c42187e801fb4412df1494"
   integrity sha1-VHJri4//TfBTxCGH6AH7RBLfFJQ=
 
+chrome-promise@^3.0.4:
+  version "3.0.4"
+  resolved "http://registry.npm.taobao.org/chrome-promise/download/chrome-promise-3.0.4.tgz#6509116b246fa1b87069df2fe0bdf333153adbb5"
+  integrity sha1-ZQkRayRvobhwad8v4L3zMxU627U=
+
 chrome-trace-event@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/chrome-trace-event/download/chrome-trace-event-1.0.0.tgz#45a91bd2c20c9411f0963b5aaeb9a1b95e09cc48"
@@ -2831,9 +2836,9 @@ get-value@^2.0.3, get-value@^2.0.6:
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
 
 github-api@^3.0.0:
-  version "3.0.0"
-  resolved "http://registry.npm.taobao.org/github-api/download/github-api-3.0.0.tgz#2832f98d0d3a83f1485e2db32c9259e4b9c40a75"
-  integrity sha1-KDL5jQ06g/FIXi2zLJJZ5LnECnU=
+  version "3.2.0"
+  resolved "http://registry.npm.taobao.org/github-api/download/github-api-3.2.0.tgz#04f4b28db3b2a67b1df9ec4a715dcb12728e3fee"
+  integrity sha1-BPSyjbOypnsd+exKcV3LEnKOP+4=
   dependencies:
     axios "^0.15.2"
     debug "^2.2.0"
@@ -3589,7 +3594,7 @@ jquery@^3.3.1:
 
 js-base64@^2.1.9:
   version "2.5.1"
-  resolved "http://registry.npm.taobao.org/js-base64/download/js-base64-2.5.1.tgz#1efa39ef2c5f7980bb1784ade4a8af2de3291121"
+  resolved "http://registry.npm.taobao.org/js-base64/download/js-base64-2.5.1.tgz?cache=0&other_urls=http%3A%2F%2Fregistry.npm.taobao.org%2Fjs-base64%2Fdownload%2Fjs-base64-2.5.1.tgz#1efa39ef2c5f7980bb1784ade4a8af2de3291121"
   integrity sha1-Hvo57yxfeYC7F4St5KivLeMpESE=
 
 js-levenshtein@^1.1.3:
@@ -6450,6 +6455,11 @@ vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
   resolved "http://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha1-HuO8mhbsv1EYvjNLsV+cRvgvWCU=
+
+vue-virtual-scroll-list@^1.3.4:
+  version "1.3.4"
+  resolved "http://registry.npm.taobao.org/vue-virtual-scroll-list/download/vue-virtual-scroll-list-1.3.4.tgz#fc405976162a9f7cb0574e34147e96d1afd62c68"
+  integrity sha1-/EBZdhYqn3ywV040FH6W0a/WLGg=
 
 vue@^2.6.10:
   version "2.6.10"

@@ -3,7 +3,6 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import 'font-awesome/css/font-awesome.min.css';
 import App from './components/App';
-import Storage from './Storage';
 import _ from 'lodash';
 import shortid from 'shortid';
 import '../css/clipboard.css';
@@ -12,28 +11,34 @@ import ClipboardJS from 'clipboard';
 import VueClipboard from 'vue-clipboard2';
 import VueLazyload from 'vue-lazyload';
 
-window.db = Storage.db;
-window.shortid = shortid;
-window._ = _;
+import low from 'lowdb';
+import ChromeStorage from './utils/ChromeStorage';
 
-chrome.storage.sync.get(items => {
-    db.defaults({
-        token: items.token,
-        tags: items.tags ? items.tags : [],
-        repositories: [],
-        tagsAndRepositories: items.tagsAndRepositories ? items.tagsAndRepositories : [],
-    }).write();
+low(new ChromeStorage('TheFuckingGithub')).then(db => {
+    chrome.storage.sync.get(items => {
+        db.defaults({
+            token: items.token,
+            tags: items.tags ? items.tags : [],
+            repositories: [],
+            tagsAndRepositories: items.tagsAndRepositories ? items.tagsAndRepositories : [],
+        }).write();
 
-    Vue.use(ElementUI);
-    Vue.use(VueClipboard);
-    Vue.use(VueLazyload, {
-        loading: chrome.extension.getURL('icons/loading.gif'),
-        dispatchEvent: true,
-    });
+        window.db = db;
+        window.shortid = shortid;
+        window._ = _;
 
-    window.app = new Vue({
-        el: '#app',
-        render: h => h(App)
+        Vue.use(ElementUI);
+        Vue.use(VueClipboard);
+        Vue.use(VueLazyload, {
+            loading: chrome.extension.getURL('icons/loading.gif'),
+            dispatchEvent: true,
+            lazyComponent: true,
+        });
+
+        window.app = new Vue({
+            el: '#app',
+            render: h => h(App)
+        });
     });
 });
 

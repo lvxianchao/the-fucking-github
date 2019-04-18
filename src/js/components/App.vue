@@ -34,56 +34,57 @@
         </el-header>
 
         <Search @filter="filter" :starredCount="starredCount"></Search>
-
+        <!--v-lazy-container="{selector: 'img'}"-->
         <el-container class="content" v-lazy-container="{selector: 'img'}">
             <el-aside class="aside" style="width: 400px;">
                 <div class="aside-scroll">
                     <el-badge :value="this.repositories.length" type="primary" class="repositories-count"/>
                     <el-card class="aside-card">
-                        <el-row>
-                            <el-col :span="24">
-                                <div class="grid-content bg-purple-dark">
-                                    <el-card v-for="(repository, index) in repositories" :key="repository.repo.id"
-                                             class="repository-card"
-                                             :class="{'aside-card-selected': index === asideCardSelectedIndex}"
-                                             @click.native="showRepository(repository, index)"
-                                             shadow="hover">
-                                        <div class="owner-avatar">
-                                            <img :src="loadingImgSrc" :data-src="repository.repo.owner.avatar_url"
-                                                 :alt="repository.repo.owner.login">
-                                        </div>
-                                        <span class="owner-name">{{ repository.repo.owner.login }}</span>
-                                        <div class="repository-name">{{ repository.repo.name }}</div>
+                        <div class="grid-content bg-purple-dark">
+                            <VirtualList :size="100" :remain="15">
+                                <el-card v-for="(repository, index) in repositories"
+                                         :key="repository.repo.id" class="repository-card"
+                                         :class="{'aside-card-selected': index === asideCardSelectedIndex}"
+                                         @click.native="showRepository(repository, index)"
+                                         shadow="hover">
+                                    <div class="owner-avatar">
+                                        <img :src="loadingImgSrc" :data-src="repository.repo.owner.avatar_url"
+                                             :alt="repository.repo.owner.login"
+                                             :key="repository.repo.owner.avatar_url">
+                                    </div>
+                                    <span class="owner-name">{{ repository.repo.owner.login }}</span>
+                                    <div class="repository-name">{{ repository.repo.name }}</div>
 
-                                        <div class="repository-description">{{ repository.repo.description }}</div>
+                                    <div class="repository-description">{{ repository.repo.description }}</div>
 
-                                        <div>
-                                            <div class="language">
-                                                <img :src="loadingImgSrc"
-                                                     :data-src="languageIcon(repository.repo.language)">
-                                                <div>{{ repository.repo.language ? repository.repo.language : 'unknown' }}</div>
-                                            </div>
-                                            <div class="starred-at">
-                                                <i class="fa fa-clock-o"></i>
-                                                <span>{{ repository.starred_at.substr(0, 10) }}</span>
-                                            </div>
-                                            <div class="forks-count">
-                                                <i class="fa fa-code-fork"></i>
-                                                <span>{{ repository.repo.forks }}</span>
-                                            </div>
-                                            <div class="starred-count">
-                                                <i class="fa fa-star-o"></i>
-                                                <span>{{ repository.repo.stargazers_count }}</span>
-                                            </div>
+                                    <div>
+                                        <div class="language">
+                                            <img :src="loadingImgSrc"
+                                                 :data-src="languageIcon(repository.repo.language)"
+                                                 :alt="repository.repo.language">
+                                            <div>{{ repository.repo.language ? repository.repo.language : 'unknown' }}</div>
                                         </div>
-                                        <div class="clear"></div>
-                                    </el-card>
-                                </div>
-                            </el-col>
-                        </el-row>
+                                        <div class="starred-at">
+                                            <i class="fa fa-clock-o"></i>
+                                            <span>{{ repository.starred_at.substr(0, 10) }}</span>
+                                        </div>
+                                        <div class="forks-count">
+                                            <i class="fa fa-code-fork"></i>
+                                            <span>{{ repository.repo.forks }}</span>
+                                        </div>
+                                        <div class="starred-count">
+                                            <i class="fa fa-star-o"></i>
+                                            <span>{{ repository.repo.stargazers_count }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </el-card>
+                            </VirtualList>
+                        </div>
                     </el-card>
                 </div>
             </el-aside>
+
             <el-container class="main-container">
                 <el-main class="main">
                     <el-card class="repository-container">
@@ -142,6 +143,7 @@
     import Followers from './Followers';
     import SearchOnline from './SearchOnline';
     import Donate from './Donate';
+    import VirtualList from 'vue-virtual-scroll-list';
 
     export default {
         name: 'App',
@@ -172,7 +174,7 @@
             }
         },
         components: {
-            Tags, Search, Toc, Followers, SearchOnline, Donate,
+            Tags, Search, Toc, Followers, SearchOnline, Donate, VirtualList,
         },
         methods: {
             // 更新加载状态
@@ -365,6 +367,10 @@
                     db.set('token', value).write();
                     window.location.reload();
                 });
+            },
+
+            lazy(component) {
+                console.log('this.component is showing');
             }
         },
 
@@ -485,9 +491,26 @@
 
                 .aside-card {
                     width: 400px;
+                    height: 100%;
+
+                    .el-card__body {
+                        height: 100%;
+                        padding-bottom: 0;
+
+                        .grid-content {
+                            width: 400px;
+                            height: 100%;
+                            padding-right: 6px;
+                        }
+                    }
 
                     .repository-card {
                         margin-bottom: 15px;
+                        margin-right: 20px;
+
+                        .el-card__body {
+                            padding-bottom: 20px;
+                        }
 
                         &.aside-card-selected {
                             border-color: $main-color;

@@ -16,9 +16,11 @@
     },
     "permissions": [
         "storage",
+        "unlimitedStorage",
         "activeTab",
         "tabs",
-        "https://api.github.com/*"
+        "https://api.github.com/*",
+        "https://*.githubusercontent.com/*"
     ],
     "background": {
         "scripts": [
