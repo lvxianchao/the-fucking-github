@@ -367,10 +367,6 @@
                     window.location.reload();
                 });
             },
-
-            lazy(component) {
-                console.log('this.component is showing');
-            }
         },
 
         mounted() {

@@ -20,3 +20,13 @@ chrome.tabs.onRemoved.addListener(function (tabId) {
         window.tabId = null;
     }
 });
+
+// 监听存储事件：同步 Token 和 Tags
+chrome.storage.onChanged.addListener(function (changes, areaName) {
+    if (areaName === 'local') {
+        let data = changes.TheFuckingGithub.newValue;
+
+        chrome.storage.sync.set({tags: data.tags});
+        chrome.storage.sync.set({tagsAndRepositories: data.tagsAndRepositories});
+    }
+});

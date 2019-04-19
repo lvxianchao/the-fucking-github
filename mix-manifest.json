@@ -4,6 +4,5 @@
     "/dist/js/background.js": "/dist/js/background.js",
     "/dist/js/iframe.js": "/dist/js/iframe.js",
     "/dist/manifest.json": "/dist/manifest.json",
-    "/dist/iframe.html": "/dist/iframe.html",
     "/dist/index.html": "/dist/index.html"
 }

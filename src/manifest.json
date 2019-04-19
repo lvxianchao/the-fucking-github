@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "The Fucking Github",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "View starred repositories, organizing stars, searching stars for Github.",
     "homepage_url": "https://github.com/lvxianchao/the-fucking-github",
     "icons": {
