@@ -41,7 +41,7 @@
                     <el-badge :value="this.repositories.length" type="primary" class="repositories-count"/>
                     <el-card class="aside-card">
                         <div class="grid-content bg-purple-dark">
-                            <VirtualList :size="100" :remain="15" style="height: 100%;">
+                            <VirtualList ref="virtualList" :size="100" :remain="10" style="height: 100%;">
                                 <el-card v-for="(repository, index) in repositories"
                                          :key="repository.repo.id" class="repository-card"
                                          :class="{'aside-card-selected': index === asideCardSelectedIndex}"
@@ -302,6 +302,9 @@
             filter(repositories) {
                 this.repositories = repositories;
                 this.asideCardSelectedIndex = null;
+
+                // 强制渲染虚拟滚动，修复：当过滤的项目为 0 以后，再次过滤不显示列表的问题。
+                this.$refs.virtualList.forceRender();
             },
 
             // 获取 Following 和 Followers 的数据
