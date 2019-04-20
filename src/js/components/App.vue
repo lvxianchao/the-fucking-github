@@ -170,18 +170,13 @@
                 readmeHtmlWithAnchor: '',
                 readmeLoading: true,
                 hasSearchOnline: false,
-                storage: window.localStorage.getItem('TheFuckingGithub'),
+                filtering: false,
             }
         },
         components: {
             Tags, Search, Toc, Followers, SearchOnline, Donate, VirtualList,
         },
         methods: {
-            // 更新加载状态
-            changeLoadingStatus(status) {
-                this.loading = status;
-            },
-
             // 处理语言 icon
             languageIcon(language) {
                 if (!language) {
@@ -267,7 +262,7 @@
                                 // 填充项目表
                                 db.set('repositories', data).write();
                                 // 如果没有启用在线搜索，则更新项目区
-                                if (!this.hasSearchOnline) {
+                                if (!this.hasSearchOnline && !this.filtering) {
                                     this.repositories = data;
                                 }
                                 this.loading = false;
@@ -300,6 +295,8 @@
 
             // 按条件过滤项目
             filter(repositories) {
+                this.filtering = true;
+
                 this.repositories = repositories;
                 this.asideCardSelectedIndex = null;
 
