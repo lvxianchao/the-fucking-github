@@ -43,7 +43,7 @@
             <el-col :span="3">
                 <el-select v-model="selectedLanguage" default-first-option size="small" filterable
                            @change="filterWithLanguages" placeholder="Languages" clearable no-data-text="no data"
-                           no-match-text="no match data">
+                           no-match-text="no match data" @clear="filterWithLanguagesClear">
                     <el-option v-for="language in languages" :key="language.value" :value="language.value"
                                :label="language.label">
                         <span>{{ language.label }}</span>
@@ -181,6 +181,13 @@
                 this.emit();
             },
 
+            // 清空语言过滤条件事件，恢复所有已 star 的项目列表。
+            filterWithLanguagesClear() {
+                this.repositories = db.get('repositories').value();
+
+                this.emit();
+            },
+
             // 获取编程语言数据
             getLanguages() {
                 let languages = db.get('repositories').map('repo.language').value();
@@ -210,6 +217,7 @@
                 this.languages = _.orderBy(data, ['total'], 'desc');
             },
 
+            // 获取每个标签的项目数量
             repositoriesCountOfTag(tagId) {
                 return db.get('tagsAndRepositories').filter({tagId: tagId}).value().length;
             }
@@ -221,8 +229,8 @@
         },
 
         watch: {
+            // 获取处于各种标签状态的项目数量
             starredCount() {
-                // 获取处于各种状态的项目数量
                 this.tagStatus[0].count = this.starredCount;
                 this.tagStatus[2].count = db.get('tagsAndRepositories').value().length;
                 this.tagStatus[1].count = this.starredCount - this.tagStatus[2].count;
