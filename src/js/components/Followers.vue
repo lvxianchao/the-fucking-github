@@ -1,7 +1,8 @@
 <template>
     <el-badge :value="followers.length" type="primary" class="badge">
-        <el-select :placeholder="placeholder" class="following-and-followers" value="">
-            <el-option value="" style="margin-bottom: 10px;" v-for="follower in followers"
+        <el-select :placeholder="placeholder" class="following-and-followers" value="" :filterable="true"
+                   :filter-method="filter">
+            <el-option value="" style="margin-bottom: 10px;" v-for="follower in users"
                        :key="follower.id">
                 <a :href="follower.html_url" target="_blank"
                    style="text-decoration: none; color: #666666;">
@@ -29,6 +30,23 @@
             followers: {
                 require: true,
                 type: Array,
+            },
+        },
+        data() {
+            return {
+                users: this.followers
+            };
+        },
+        methods: {
+            filter(name) {
+                this.users = this.followers.filter(follower => {
+                    return _.includes(follower.login.toLowerCase(), name.toLowerCase());
+                });
+            },
+        },
+        watch: {
+            followers(n) {
+                this.users = n;
             }
         }
     }
