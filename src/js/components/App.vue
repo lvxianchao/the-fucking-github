@@ -34,13 +34,14 @@
         </el-header>
 
         <Search @filter="filter" :starredCount="starredCount"></Search>
+
         <el-container class="content">
             <el-aside class="aside" style="width: 400px;" v-lazy-container="{selector: 'img'}">
                 <div class="aside-scroll">
                     <el-badge :value="this.repositories.length" type="primary" class="repositories-count"/>
                     <el-card class="aside-card">
                         <div class="grid-content bg-purple-dark">
-                            <VirtualList :size="100" :remain="15">
+                            <VirtualList :size="100" :remain="15" style="height: 100%;">
                                 <el-card v-for="(repository, index) in repositories"
                                          :key="repository.repo.id" class="repository-card"
                                          :class="{'aside-card-selected': index === asideCardSelectedIndex}"
