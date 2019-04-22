@@ -405,6 +405,7 @@
         z-index: 1;
         top: 0;
         border-top: 3px solid $main-color;
+        min-width: 1366px;
 
         .el-card__body {
             padding: 10px 20px;

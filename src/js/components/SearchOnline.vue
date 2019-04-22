@@ -67,7 +67,7 @@
 <style scoped lang="scss">
     .el-input {
         float: left;
-        width: 400px;
+        width: 350px;
         margin-left: 30px;
 
         .loading {
