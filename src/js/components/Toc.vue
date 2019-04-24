@@ -92,8 +92,6 @@
 
 <style scoped lang="scss">
     .el-card {
-        margin-top: 45px;
-        position: absolute;
         width: 300px;
         padding: 10px;
         overflow: hidden;

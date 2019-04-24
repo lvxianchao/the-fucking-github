@@ -95,9 +95,15 @@
                                     <span>{{ repository.repo.full_name }}</span>
                                 </a>
 
+                                <el-tooltip effect="dark" placement="top" content="TOC">
+                                    <el-button type="info" icon="fa fa-list-ul" circle class="toc"
+                                               @click="triggerToc"></el-button>
+                                </el-tooltip>
+
                                 <el-tooltip effect="dark" placement="top" content="Clone with HTTPS">
                                     <el-button type="info" icon="fa fa-clone" circle class="clone"
-                                               @click="copyCloneUrlWithHttps"></el-button>
+                                               @click="copyCloneUrlWithHttps">
+                                    </el-button>
                                 </el-tooltip>
 
                                 <div class="time">
@@ -114,15 +120,18 @@
                                         <span>Starred: {{ repository.starred_at.substr(0, 10) }}</span>
                                     </div>
                                 </div>
+
                             </header>
                             <p class="description">{{ repository.repo.description }}</p>
                             <Tags :repository="repository"></Tags>
                         </el-header>
+
                         <el-container class="readme-area" v-loading="readmeLoading">
                             <el-main>
                                 <div class="markdown-body" v-html="readmeHtmlWithAnchor"></div>
                             </el-main>
-                            <el-aside>
+
+                            <el-aside v-show="isTocShow" class="toc-aside">
                                 <Toc :readmeHtmlWithoutAnchor="readmeHtml" @render="render"></Toc>
                             </el-aside>
                         </el-container>
@@ -171,6 +180,7 @@
                 readmeLoading: true,
                 hasSearchOnline: false,
                 filtering: false,
+                isTocShow: true,
             }
         },
         components: {
@@ -368,6 +378,11 @@
                     window.location.reload();
                 });
             },
+
+            // 切换 TOC 开关
+            triggerToc() {
+                this.isTocShow = !this.isTocShow;
+            }
         },
 
         mounted() {
@@ -619,9 +634,13 @@
                                 }
                             }
 
-                            .clone {
+                            .clone, .toc {
                                 float: right;
                                 cursor: pointer;
+                            }
+
+                            .toc {
+                                margin-left: 10px;
                             }
                         }
 
@@ -642,7 +661,12 @@
                                 box-sizing: border-box;
                                 max-width: 935px;
                                 margin: 0 auto;
-                                padding: 45px;
+                            }
+
+                            .toc-aside {
+                                position: sticky;
+                                top: 20px;
+                                height: 100%;
                             }
                         }
                     }
