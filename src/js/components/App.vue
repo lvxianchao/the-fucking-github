@@ -33,7 +33,7 @@
             </el-card>
         </el-header>
 
-        <Search @filter="filter" :starredCount="starredCount"></Search>
+        <Search @filter="filter" :starredCount="starredCount" @triggerToc="triggerToc"></Search>
 
         <el-container class="content">
             <el-aside class="aside" style="width: 400px;" v-lazy-container="{selector: 'img'}">
@@ -95,14 +95,9 @@
                                     <span>{{ repository.repo.full_name }}</span>
                                 </a>
 
-                                <el-tooltip effect="dark" placement="top" content="TOC">
-                                    <el-button type="info" icon="fa fa-list-ul" circle class="toc"
-                                               @click="triggerToc"></el-button>
-                                </el-tooltip>
-
                                 <el-tooltip effect="dark" placement="top" content="Clone with HTTPS">
                                     <el-button type="info" icon="fa fa-clone" circle class="clone"
-                                               @click="copyCloneUrlWithHttps">
+                                               @click="copyCloneUrlWithHttps" size="small">
                                     </el-button>
                                 </el-tooltip>
 
@@ -120,7 +115,6 @@
                                         <span>Starred: {{ repository.starred_at.substr(0, 10) }}</span>
                                     </div>
                                 </div>
-
                             </header>
                             <p class="description">{{ repository.repo.description }}</p>
                             <Tags :repository="repository"></Tags>
@@ -382,6 +376,7 @@
             // 切换 TOC 开关
             triggerToc() {
                 this.isTocShow = !this.isTocShow;
+                db.set('isTocShow', this.isTocShow).write();
             }
         },
 
@@ -420,7 +415,7 @@
         z-index: 1;
         top: 0;
         border-top: 3px solid $main-color;
-        min-width: 1366px;
+        /*min-width: 1366px;*/
 
         .el-card__body {
             padding: 10px 20px;
@@ -634,13 +629,9 @@
                                 }
                             }
 
-                            .clone, .toc {
+                            .clone{
                                 float: right;
                                 cursor: pointer;
-                            }
-
-                            .toc {
-                                margin-left: 10px;
                             }
                         }
 
@@ -667,6 +658,7 @@
                                 position: sticky;
                                 top: 20px;
                                 height: 100%;
+                                margin-top: 20px;
                             }
                         }
                     }

@@ -28,5 +28,6 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
 
         chrome.storage.sync.set({tags: data.tags});
         chrome.storage.sync.set({tagsAndRepositories: data.tagsAndRepositories});
+        chrome.storage.sync.set({isTocShow: data.isTocShow});
     }
 });

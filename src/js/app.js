@@ -21,6 +21,7 @@ low(new ChromeStorage('TheFuckingGithub')).then(db => {
             tags: items.tags ? items.tags : [],
             repositories: [],
             tagsAndRepositories: items.tagsAndRepositories ? items.tagsAndRepositories : [],
+            isTocShow: items.isTocShow ? items.isTocShow : false,
         }).write();
 
         window.db = db;

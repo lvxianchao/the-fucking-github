@@ -26,7 +26,7 @@
             </el-col>
 
             <!--按名称、作者、描述过滤-->
-            <el-col :span="12">
+            <el-col :span="11">
                 <el-input prefix-icon="el-icon-search" placeholder="keywords" size="small"
                           @input="filterWithKeywords" v-model="keywords" clearable>
                     <template slot="prepend">
@@ -51,6 +51,14 @@
                     </el-option>
                 </el-select>
             </el-col>
+
+            <el-col :span="1">
+                <el-tooltip effect="dark" placement="top" content="TOC">
+                    <el-button type="info" icon="fa fa-list-ul" circle class="toc" size="small"
+                               @click="triggerToc">
+                    </el-button>
+                </el-tooltip>
+            </el-col>
         </el-row>
     </el-header>
 </template>
@@ -58,11 +66,13 @@
 <script>
     export default {
         name: 'Search',
+
         props: {
             starredCount: {
                 require: true,
             },
         },
+
         data() {
             return {
                 tags: db.get('tags').value(),
@@ -220,6 +230,11 @@
             // 获取每个标签的项目数量
             repositoriesCountOfTag(tagId) {
                 return db.get('tagsAndRepositories').filter({tagId: tagId}).value().length;
+            },
+
+            // 开关 TOC
+            triggerToc() {
+                this.$emit('triggerToc');
             }
         },
 
@@ -260,5 +275,10 @@
         margin-top: 5px;
         box-sizing: border-box;
         margin-left: 15px;
+    }
+
+    .toc {
+        display: block;
+        margin: auto;
     }
 </style>

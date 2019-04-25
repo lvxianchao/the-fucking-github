@@ -17,7 +17,6 @@ mix.sass('src/css/app.scss', 'dist/css/');
 mix.copyDirectory('fonts', 'dist/fonts');
 mix.copyDirectory('src/icons', 'dist/icons');
 mix.copy('src/js/background.js', 'dist/js/');
-mix.copy('src/js/iframe.js', 'dist/js/');
 mix.copy('src/manifest.json', 'dist/');
 mix.copy('src/*.html', 'dist/');
 
