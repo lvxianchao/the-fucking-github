@@ -84,6 +84,9 @@
                     $(this).replaceWith(copy);
                 });
 
+                // 去除标签图片后换行标签
+                html.find('p>a').siblings('br').remove();
+
                 this.$emit('render', html.html());
             },
         },
