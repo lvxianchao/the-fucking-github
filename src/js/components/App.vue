@@ -126,7 +126,7 @@
                             </el-main>
 
                             <el-aside v-show="isTocShow" class="toc-aside">
-                                <Toc :readmeHtmlWithoutAnchor="readmeHtml" @render="render"></Toc>
+                                <Toc :readmeHtmlWithoutAnchor="readmeHtml" :repository="repository" @render="render"></Toc>
                             </el-aside>
                         </el-container>
                     </el-card>

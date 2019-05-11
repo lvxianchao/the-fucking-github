@@ -16,6 +16,10 @@
                 type: String,
                 require: true,
             },
+            repository: {
+                type: Object,
+                require: true,
+            }
         },
         data() {
             return {
@@ -25,6 +29,7 @@
                     label: 'name',
                 },
                 jumpToNodeId: '',
+                repo: {},
             }
         },
 
@@ -87,9 +92,24 @@
                 // 去除标签图片后换行标签
                 html.find('p>a').siblings('br').remove();
 
+                // 将相对路径的图片转为绝对路径
+                let repository = this.repository.repo;
+                html.find('img').each(function () {
+                    let src = $(this).attr('src');
+                    if (!src.startsWith('https')) {
+                        src = '/' + _.trimStart(src, '/');
+                        src = 'https://raw.githubusercontent.com/' + repository.full_name + '/' + repository.default_branch + '/' + src;
+                        $(this).attr('src', src);
+                    }
+                });
+
                 this.$emit('render', html.html());
             },
         },
+
+        // mounted() {
+        //     this.repo = this.repository.repo;
+        // }
     }
 </script>
 
