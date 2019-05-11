@@ -174,7 +174,7 @@
                 readmeLoading: true,
                 hasSearchOnline: false,
                 filtering: false,
-                isTocShow: true,
+                isTocShow: db.get('isTocShow').value(),
             }
         },
         components: {
@@ -629,7 +629,7 @@
                                 }
                             }
 
-                            .clone{
+                            .clone {
                                 float: right;
                                 cursor: pointer;
                             }
