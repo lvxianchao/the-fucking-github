@@ -163,17 +163,17 @@
             filterWithKeywordsWithDebounce(keywords) {
                 this.repositories = db.get('repositories').value().filter(repository => {
                     if (_.indexOf(this.keywordsRange, 'name') !== -1) {
-                        if (repository.repo.name.includes(keywords)) {
+                        if (repository.repo.name.toLowerCase().includes(keywords.toLowerCase())) {
                             return true;
                         }
                     }
                     if (_.indexOf(this.keywordsRange, 'owner') !== -1) {
-                        if (repository.repo.owner.login.includes(keywords)) {
+                        if (repository.repo.owner.login.toLowerCase().includes(keywords.toLowerCase())) {
                             return true;
                         }
                     }
                     if (_.indexOf(this.keywordsRange, 'description') !== -1) {
-                        if (repository.repo.description && repository.repo.description.includes(keywords)) {
+                        if (repository.repo.description && repository.repo.description.toLowerCase().includes(keywords.toLowerCase())) {
                             return true;
                         }
                     }
