@@ -270,6 +270,9 @@
                                     this.repositories = data;
                                 }
                                 this.loading = false;
+
+                                // 强制渲染，解决第一次加载无法正常显示项目列表的问题。
+                                this.$refs.virtualList.forceRender();
                             });
                     });
             },
