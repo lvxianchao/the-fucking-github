@@ -90,11 +90,14 @@
                     <el-card class="repository-container">
                         <el-header style="height: auto;">
                             <header>
+                                <Star :repository="repository"></Star>
+
                                 <a :href="repository.repo.html_url" target="_blank" class="full-name">
                                     <i class="fa fa-home"></i>
                                     <span>{{ repository.repo.full_name }}</span>
                                 </a>
 
+                                <!--复制克隆项目地址到剪切板-->
                                 <el-tooltip effect="dark" placement="top" content="Clone with HTTPS">
                                     <el-button type="info" icon="fa fa-clone" circle class="clone"
                                                @click="copyCloneUrlWithHttps" size="small">
@@ -126,7 +129,8 @@
                             </el-main>
 
                             <el-aside v-show="isTocShow" class="toc-aside">
-                                <Toc :readmeHtmlWithoutAnchor="readmeHtml" :repository="repository" @render="render"></Toc>
+                                <Toc :readmeHtmlWithoutAnchor="readmeHtml" :repository="repository"
+                                     @render="render"></Toc>
                             </el-aside>
                         </el-container>
                     </el-card>
@@ -147,6 +151,7 @@
     import SearchOnline from './SearchOnline';
     import Donate from './Donate';
     import VirtualList from 'vue-virtual-scroll-list';
+    import Star from './Star';
 
     export default {
         name: 'App',
@@ -178,7 +183,7 @@
             }
         },
         components: {
-            Tags, Search, Toc, Followers, SearchOnline, Donate, VirtualList,
+            Tags, Search, Toc, Followers, SearchOnline, Donate, VirtualList, Star,
         },
         methods: {
             // 处理语言 icon
