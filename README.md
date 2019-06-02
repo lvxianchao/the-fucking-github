@@ -2,9 +2,11 @@
 
 A Chrome browser extension. View starred repositories, organizing stars, searching stars and searching repositories online for Github.
 
-![The Fucking Github](https://user-images.githubusercontent.com/22412818/56089456-8980d200-5ec5-11e9-9e6e-820677beefb8.png)
+**点击图片观看 Youtube 视频介绍👇**
 
-[中文说明](https://coderlxc.com/2019/04/14/The-Fucking-Github/)
+[![【自由编码】CE01 - 使用 Chrome 扩展高效管理 Github Stars](https://images.coderlxc.com/blog/vtw0z.jpg)](https://youtu.be/HigSAh31xEc)
+
+![The Fucking Github](https://user-images.githubusercontent.com/22412818/56089456-8980d200-5ec5-11e9-9e6e-820677beefb8.png)
 
 ## What
 
