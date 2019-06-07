@@ -427,6 +427,8 @@
 
         .el-card__body {
             padding: 10px 20px;
+            max-height: 60px;
+            overflow: hidden;
 
             .logo {
                 float: left;
