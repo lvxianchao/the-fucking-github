@@ -43,7 +43,7 @@ If you don't already have one, [create one](https://github.com/settings/tokens/n
 
 **Warning**
 
-If you have already started using it before version 1.3.1, please delete the TOKEN in use directly at the [personal access tokens page](https://github.com/settings/tokens) and regenerate it. See [#12](https://github.com/lvxianchao/the-fucking-github/issues/13#issuecomment-499945875)
+If you have already started using it before version 1.3.1, please delete the TOKEN in use directly at the [personal access tokens page](https://github.com/settings/tokens) and regenerate it. See [#16](https://github.com/lvxianchao/the-fucking-github/issues/16)
 
 ![Create the Access Token](https://user-images.githubusercontent.com/22412818/59117257-e8bc0980-897f-11e9-8830-7bc40d65085a.png)
 
