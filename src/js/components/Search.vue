@@ -247,7 +247,7 @@
             // 获取处于各种标签状态的项目数量
             starredCount() {
                 this.tagStatus[0].count = this.starredCount;
-                this.tagStatus[2].count = db.get('tagsAndRepositories').value().length;
+                this.tagStatus[2].count = _.uniq(db.get('tagsAndRepositories').map('repositoryId').value()).length;
                 this.tagStatus[1].count = this.starredCount - this.tagStatus[2].count;
             }
         }
