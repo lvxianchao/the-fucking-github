@@ -19,6 +19,7 @@
                            placeholder="Filter with tags" size="small" clearable @change="filterWithTags"
                            no-data-text="no data" no-match-text="no match data">
                     <el-option v-for="tag in tags" :key="tag.id" :value="tag.id" :label="tag.name">
+                        <i class="el-icon-circle-close delete-tag-btn" @click.stop="deleteTag(tag.id)"></i>
                         <span>{{ tag.name }}</span>
                         <el-badge :value="repositoriesCountOfTag(tag.id)" type="primary" class="mark"></el-badge>
                     </el-option>
@@ -66,13 +67,11 @@
 <script>
     export default {
         name: 'Search',
-
         props: {
             starredCount: {
                 require: true,
             },
         },
-
         data() {
             return {
                 tags: db.get('tags').value(),
@@ -235,6 +234,18 @@
             // 开关 TOC
             triggerToc() {
                 this.$emit('triggerToc');
+            },
+
+            // 删除标签
+            deleteTag(tagId) {
+                // 删除关联标签
+                db.get('tagsAndRepositories').remove({tagId:tagId}).write();
+                // 删除标签
+                db.get('tags').remove({id:tagId}).write();
+                // 删除 data 里的数据
+                this.tags = this.tags.filter(item => {
+                    return item.id !== tagId;
+                });
             }
         },
 
@@ -280,5 +291,10 @@
     .toc {
         display: block;
         margin: auto;
+    }
+
+    .delete-tag-btn {
+        margin-right: 10px;
+        color: red;
     }
 </style>
